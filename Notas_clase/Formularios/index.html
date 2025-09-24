@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios</title>
+</head>
+<body>
+    <h1>Formulario de ejemplo</h1>
+
+    <form action="">
+        <!--  Tipo de texto -->
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" placeholder="Introduce tu nombre" required maxlength="10">
+
+        <!--  Tipo email -->
+        <label for="email">Correo:</label>
+        <input type= "email" name="correo" id="correo" required>
+
+        <!--  Tipo telefono -->
+        <label for="tel">Teléfono:</label>
+        <input type= "text" name="tel" id="tel">
+
+        <!--  Tipo número -->
+        <label for="edad">Edad:</label>
+        <input type="number" name="edad" id="name">
+
+        <!--  Tipo fecha -->
+        <label for="fecha">Fecha Nacimiento:</label>
+        <input type="date" name="fecha" id="fecha">
+
+        <!--  Tipo password -->
+        <label for="pass">Pasword:</label>
+        <input type="password" name="pass" id="pass">
+
+        <!--  Tipo radio -->
+        <label for="genero">Género:</label>
+        <label for="m">
+            <input type="radio" name="genero" id="M" value="M"> Masculino
+        </label>
+        <label for="F">
+            <input type="radio" name="genero" id="F" value="F"> Femenino
+        </label>
+        <label for="O">
+            <input type="radio" name="genero" id="O" value="O"> Otro
+        </label>
+
+        <!--  Tipo checkbox -->
+        <label for="intereses">Intereses:</label>
+        <label>Leer<input type="checkbox" name="intereses" value="leer"></label>
+        <label>Programar<input type="checkbox" name="intereses" value="programar"></label>
+        <label>Caminar<input type="checkbox" name="intereses" value="caminar"></label>
+
+        <!--  Tipo selección -->
+        <label for="pais">
+            País:
+            <select name="pais" id="pais">
+                <option value="">Selecciona un valor</option>
+                <option value="MX">México</option>
+                <option value="AR">Argentina</option>
+                <option value="ES">España</option>
+                <option value="CO">Colombia</option>
+                <option value="CA">Cánada</option>
+            </select>
+        </label>
+
+        <label for="color">Color:</label>
+        <input type="color" name="color" id="color">
+
+        <label for="archivo">Suba un archivo:</label>
+        <input type="file" name="archivo" id="archivo">
+
+        <br><br><br>
+        <!--  Botón de restablecer-->
+        <input type="reset" value="Restablecer">
+        
+        <!--  Botón de enviar -->
+        <input type="submit" value="Registrar">
+
+        <button type="submit">hola</button>
+
+        <button type="button" onclick="alert('Hola, Soy un botón que no envía nada')">
+            Botón JavaScript
+        </button>
+    </form>
+</body>
+</html>
