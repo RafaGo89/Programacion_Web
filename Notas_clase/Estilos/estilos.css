@@ -1,0 +1,30 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+*{
+    padding: 0;
+    margin: 0;
+}
+.name, .hex, .rgb, .rgba{
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 10px auto;
+}
+.name{
+    background-color: blueviolet;
+    color: whitesmoke;
+}
+.hex{
+    background-color: #3498db;
+    color: #fff;
+}
+.rgb{
+    background-color: rgb(47, 204, 113);
+    color: rgb(255, 255, 255);
+}
+.rgba{
+    background-color: rgba(231, 76, 60, 0.5);
+    border: 2px solid black;
+}
