@@ -1,0 +1,46 @@
+body {
+    font-family: "Rubik", sans-serif;
+    margin: 0;
+    height: 2000px;
+}
+.caja {
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    line-height: 150px;
+    font-weight: bold;
+}
+.contenedor {
+    position: relative;
+    height: 250px;
+    background-color: darkgrey;
+    margin: 20px;
+    border: 2px dashed gray;
+}
+.relative {
+    background-color: steelblue;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+.absolute {
+    background-color: crimson;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+}
+.sticky {
+    position: sticky;
+    background-color: coral;
+    top: 0;
+}
+.fixed {
+    background-color: seagreen;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

@@ -1,0 +1,34 @@
+a {
+    display: block;
+    cursor: crosshair;
+}
+h1 {
+    display: inline;
+}
+/* Enlace normal*/
+a:link {
+    color: cornflowerblue;
+    text-decoration: none;
+}
+/* Enlace visitado*/
+a:visited {
+    color: hotpink;
+}
+/* Enlace mouse sobre el link*/
+a:hover {
+    color: darkslateblue;
+    text-decoration: underline;
+}
+/* Enlace al hacer click*/
+a:active {
+    color: orange;
+}
+/* Enlace con el foco del teclado (tab)*/
+a:focus {
+    outline: 2px solid green;
+}
+/* Fuentes */
+body {
+    font-family: "Rubik", sans-serif;
+    font-weight: 300;
+}
