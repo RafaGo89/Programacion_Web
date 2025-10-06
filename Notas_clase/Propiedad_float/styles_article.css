@@ -1,0 +1,36 @@
+body {
+    font-family: "Montserrat", sans-serif;
+    margin: 40px;
+    background-color: #c4bfbf;
+}
+
+h1 {
+    text-align: center;
+    color: #3c3c3c;
+}
+
+.articulo {
+    border: 2px solid #ccc;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    overflow: auto; /* Evita que el contenedor colapse por el float*/
+}
+
+.articulo img {
+    float: left;
+    margin-right: 20px;
+    border-radius: 10px;
+    width: 150px;
+    height: auto;
+}
+
+.articulo p {
+    text-align: justify;
+}
+
+.imagen-derecha {
+    float: right !important; 
+    margin-left: 20px;
+    margin-right: 0px;
+}
