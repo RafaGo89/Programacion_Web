@@ -1,0 +1,41 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.contenedor {
+    width: 100%;
+    height: 500px;
+    border: 1px solid black;
+    position: relative;
+}
+
+.linea {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    overflow: auto;
+}
+
+.elemento {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    padding: 2px;
+    margin: 0 2px;
+}
+
+.izquierda {
+    background-color: forestgreen;
+    float: left;
+}
+
+.derecha {
+    background-color: forestgreen;
+    float: right;
+}
+
+.texto {
+    font-size: 7px;
+    text-align: center;
+}
