@@ -5,7 +5,7 @@ body {
 
 a {
   text-decoration: none; /* Elimina el subrayado de los enlaces*/
-  color: none;
+  color: black;
   font-size: 25px;
 }
 
@@ -14,10 +14,24 @@ a:visited {
   color: none;
 }
 
+nav {
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+nav a {
+    font-size: 20px;
+    color: #2796d2;
+}
+
+.metales-alcalinos a,  .metales-alcalinoterreos a, .lantanidos a{
+    color: #fff;
+}
+
 .contenedor {
     width: 100%;
     height: auto;
-    border: 1px solid black;
     position: relative;
 }
 
@@ -32,9 +46,8 @@ a:visited {
     width: 40px;
     height: 40px;
     text-align: center;
-    padding: 9px;
+    padding: 10px;
     margin: 0 2px;
-    background-color: aquamarine;
 }
 
 .izquierda {
@@ -81,7 +94,6 @@ a:visited {
 
 .metales-post {
     background-color: #b895c5;
-    color: #fff;
 }
 
 .lantanidos {
