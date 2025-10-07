@@ -3,6 +3,7 @@
     width: 250px;
     position: relative;
     margin: 0 auto;
+    
 }
 .roof {
     width: 0;
@@ -13,19 +14,19 @@
     border-bottom: 50px solid #DE7342;
     position: absolute;
     left: 75px;
+    top: 0.9px;
 }
 .chimney {
     width: 15px;
     height: 25px;
     background-color: #A15D3B;
     position: absolute;
-    left: 10px;
     top: 70px;
     left: 90px;
 }
 .wall {
     margin: 0 auto;
-    width: 100px;
+    width: 99px;
     height: 50px;
     background-color: #FDF3E3;
     position: absolute;

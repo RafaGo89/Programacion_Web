@@ -3,39 +3,93 @@ body {
     text-align: center;
 }
 
+a {
+  text-decoration: none; /* Elimina el subrayado de los enlaces*/
+  color: none;
+  font-size: 25px;
+}
+
+a:visited {
+  text-decoration: none; /* Elimina el subrayado de los enlaces*/
+  color: none;
+}
+
 .contenedor {
     width: 100%;
-    height: 500px;
+    height: auto;
     border: 1px solid black;
     position: relative;
 }
 
-.linea {
+.fila {
     width: 100%;
     height: auto;
-    border: 1px solid black;
     overflow: auto;
+    margin-bottom: 5px;
 }
 
 .elemento {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     text-align: center;
-    padding: 2px;
+    padding: 8px;
     margin: 0 2px;
+    background-color: aquamarine;
 }
 
 .izquierda {
-    background-color: forestgreen;
     float: left;
 }
 
 .derecha {
-    background-color: forestgreen;
     float: right;
 }
 
+.metales-alcalinos {
+    background-color: #d1202d;
+    color: #fff;
+}
+
+.metaloides {
+    background-color: #fdcf0b;
+}
+
+.actonoides {
+    background-color: #76c8a9;
+}
+
+.metales-alcalinoterreos {
+    background-color: #f5a720;
+    color: #fff;
+}
+
+.Nmetales-reactivos {
+    background-color: #9ec87c;
+}
+
+.desconocido {
+    background-color: #c3c3c3;
+}
+
+.metales-transicionales {
+    background-color: #9bbfe2;
+}
+
+.gases-nobles {
+    background-color: #f5b2ca;
+}
+
+.metales-post {
+    background-color: #b895c5;
+    color: #fff;
+}
+
+.lantanidos {
+    background-color: #2796d2;
+    color: #fff;
+}
+
 .texto {
-    font-size: 7px;
+    font-size: 9px;
     text-align: center;
 }
