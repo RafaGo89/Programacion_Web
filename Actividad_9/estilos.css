@@ -3,6 +3,10 @@ body {
     text-align: center;
 }
 
+main {
+    position: relative;
+}
+
 a {
   text-decoration: none; /* Elimina el subrayado de los enlaces*/
   color: black;
@@ -12,6 +16,10 @@ a {
 a:visited {
   text-decoration: none; /* Elimina el subrayado de los enlaces*/
   color: none;
+}
+
+a:hover {
+    color: #1b668b !important;
 }
 
 nav {
@@ -32,8 +40,14 @@ nav a {
 .contenedor {
     width: 100%;
     height: auto;
-    position: relative;
     margin-bottom: 30px;
+}
+
+.leyenda {
+    width: 90%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 80px;
 }
 
 .fila {
@@ -49,6 +63,14 @@ nav a {
     text-align: center;
     padding: 10px;
     margin: 0 2px;
+    position: relative;
+}
+
+.simbolo {
+    width: 35px;
+    height: 35px;
+    float: left;
+    margin-bottom: 20px;
 }
 
 .izquierda {
@@ -105,4 +127,18 @@ nav a {
 .texto {
     font-size: 9px;
     text-align: center;
+}
+
+.desc {
+    float: left;
+    display: inline;
+    margin-right: 50px;
+    margin-left: 4px;
+}
+
+.numero-elemento {
+    font-size: 6px;
+    position: absolute;
+    left: 81%;
+    bottom: 85%;
 }
