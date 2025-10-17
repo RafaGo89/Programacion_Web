@@ -1,0 +1,13 @@
+body {
+    font-family: sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #1b668b;
+}
+
+a:visited {
+    text-decoration: none;
+    color: none;
+}
