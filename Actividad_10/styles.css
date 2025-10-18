@@ -1,0 +1,24 @@
+body {
+    font-family: sans-serif;
+    margin: 0 15px;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.nav-principal ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    list-style-type: none;
+    background-color: #DB5B69;
+    padding: 10px;
+    margin: 0 auto;
+    color: #FFF;
+    clear: both;
+}
