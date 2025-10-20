@@ -43,7 +43,7 @@ main {
 .izquierda {
     display: flex;
     flex-direction: column;
-    max-width: 290px;
+    max-width: 260px;
 }
 
 .otras-noticias {
@@ -107,7 +107,7 @@ article h2 {
 .derecha {
     display: flex;
     flex-direction: column;
-    max-width: 250px;
+    max-width: 230px;
     border: 4px solid #1AC0D0;
     padding: 10px;
 }
@@ -126,15 +126,17 @@ article h2 {
 .imagen-texto {
     display: flex;
     gap: 15px;
+    align-items: flex-start;
 }
 
 article p {
+    margin-top: 5px;
     font-size: 23px;
 }
 
 article .leer-mas {
     display: block;
-    margin-top: 20px;
+    margin-top: 17px;
 }
 
 footer {
@@ -160,4 +162,10 @@ footer nav ul li {
 
 .creditos {
     font-weight: bold;
+}
+
+img {
+    margin-top: 5px;
+    height: 200px;
+    width: 200px;
 }
