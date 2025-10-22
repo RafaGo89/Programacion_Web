@@ -1,50 +1,6 @@
-body {
-    font-family: "Montserrat", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    margin: 0;
-}
-
-#contenedor {
+.layout-grid {
     display: grid;
-    grid-template-rows: 160px 1fr 50px;
-}
-
-header {
-    background: #212529;
-    text-align: center;
-}
-
-header p {
-    font-size: 18px;
-}
-
-h1, p {
-    color: #E9ECEF;
-    margin: 15px 0;
-}
-
-h1 {
-    font-size: 45px;
-}
-
-p {
-    color: rgb(240, 235, 216);
-}
-
-main {
-    background: #E9ECEF;
-    padding: 60px 0;
-}
-
-a {
-    text-decoration: none;
-    color: #6C757D;
-}
-
-a:visited {
-    text-decoration: none;
-    color: none;
+    grid-template-rows: auto 1fr 50px;
 }
 
 li {
@@ -57,10 +13,13 @@ li {
 }
 
 footer {
-    background: #495057;
-    text-align: right;
+    background: #6C757D;
 }
 
 footer p {
     margin-right: 10px;
+}
+
+nav.navbar {
+  background-color: #CED4DA; /* Un tono morado como ejemplo */
 }
