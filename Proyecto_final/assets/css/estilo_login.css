@@ -1,0 +1,22 @@
+body {
+    min-height: 100vh;
+}
+
+.row {
+    min-height: 100vh;
+}
+
+.bg-primario {
+    background-color: #6096BA;
+}
+
+.bg-secundario {
+    background-color: #E7ECEF;
+}
+.otro {
+    background-color: #A3CEF1;
+}
+
+.color-texto {
+    color: #E7ECEF;
+}
