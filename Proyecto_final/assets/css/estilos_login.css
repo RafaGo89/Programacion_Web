@@ -2,6 +2,22 @@ body {
     min-height: 100vh;
 }
 
+.derecha {
+    background-image: url('../imgs/a.jpg');
+    
+    /* Hace que la imagen cubra todo */
+    background-size: cover;
+
+    /* Evita que la imagen se repita */
+    background-repeat: no-repeat;
+
+    /* Centra la imagen en la pantalla */
+    background-position: center center;
+
+    /* Asegura que el body ocupe al menos toda la altura de la ventana */
+    min-height: 100vh;
+}
+
 .row {
     min-height: 100vh;
 }
