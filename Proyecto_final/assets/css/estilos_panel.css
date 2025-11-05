@@ -1,0 +1,26 @@
+.bg-primario {
+    background-color: #6096BA;
+}
+
+.bg-secundario {
+    background-color: #E7ECEF;
+}
+
+.bg-boton {
+    background-color: #274C77;
+}
+
+/* --- Mis Botones Personalizados --- */
+.btn-accion {
+    background-color: #274C77; 
+    
+    color: #E7ECEF;
+    
+    border-color: #274C77;
+}
+
+.btn-accion:hover {
+    background-color: #355f90; /* Un tono un poco más claro */
+    border-color: #355f90;
+    color: #E7ECEF;
+}
