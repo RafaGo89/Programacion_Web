@@ -8,20 +8,31 @@
 </head>
 <body>
     <?php
+        // Navegador para regresar al index
         echo "<nav aria-label='breadcrumb'> 
                 <ol class='breadcrumb'>
-                    <li class='breadcrumb-item fs-4 ps-2'><a href='calculadora.html'>Regresar</a></li>
+                    <li class='breadcrumb-item fs-4 ps-2'><a href='index.html'>Regresar</a></li>
                 </ol>
              </nav>";
+
+        // Verificar si hay valores nulos o que no sean un número en los campos enviados
+        if (!isset($_GET['num1']) || !is_numeric($_GET['num1']) ||
+            !isset($_GET['num2']) || !is_numeric($_GET['num2']) ||
+            empty($_GET['operacion'])) {
+            echo "<div class='container mt-5 text-center fs-2 bg-dark text-light rounded p-2'>
+                    Dejaste un campo vacío, no se pudo realizar la operación    
+                 </div>";
+            exit;
+        }
 
         // Variables
         $num1 = $_GET['num1'];
         $num2 = $_GET['num2'];
+        $tipo_operacion = $_GET['operacion'];
         $resultado = 0;
         $simbolo = '+';
 
-        $tipo_operacion = $_GET['operacion'];
-
+        // Elegir operación
         switch($tipo_operacion) {
             case 'suma':
                 $resultado = $num1 + $num2;
@@ -39,7 +50,9 @@
 
             case 'division':
                 if ($num2 == 0) {
-                    echo 'No se puede dividir entre 0<br>';
+                    echo "<div class='container mt-5 text-center fs-2 bg-dark text-light rounded p-2'>
+                            No se puede dividir entre 0
+                         </div>";
                     exit;
                 }
                 $resultado = $num1 / $num2;
@@ -52,6 +65,7 @@
             break;
         }
 
+        // Imprimir resultado
         echo "<div class='container mt-5 text-center fs-2 bg-dark text-light rounded p-2'>
                 El resultado de la {$tipo_operacion} de {$num1} {$simbolo} {$num2} es:<br> {$resultado}
              </div>";
