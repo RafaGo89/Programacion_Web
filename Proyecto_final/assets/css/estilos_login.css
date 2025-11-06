@@ -3,7 +3,7 @@ body {
 }
 
 .derecha {
-    background-image: url('../imgs/a.jpg');
+    background-image: url('../imgs/fondo_login.jpg');
     
     /* Hace que la imagen cubra todo */
     background-size: cover;
@@ -31,5 +31,20 @@ body {
 }
 
 .color-texto {
+    color: #E7ECEF;
+}
+
+/* --- Mis Botones Personalizados --- */
+.btn-accion {
+    background-color: #274C77; 
+    
+    color: #E7ECEF;
+    
+    border-color: #274C77;
+}
+
+.btn-accion:hover {
+    background-color: #355f90; /* Un tono un poco más claro */
+    border-color: #355f90;
     color: #E7ECEF;
 }

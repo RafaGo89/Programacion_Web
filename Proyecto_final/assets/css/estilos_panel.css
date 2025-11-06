@@ -6,10 +6,6 @@
     background-color: #E7ECEF;
 }
 
-.bg-boton {
-    background-color: #274C77;
-}
-
 /* --- Mis Botones Personalizados --- */
 .btn-accion {
     background-color: #274C77; 
@@ -23,4 +19,38 @@
     background-color: #355f90; /* Un tono un poco más claro */
     border-color: #355f90;
     color: #E7ECEF;
+}
+
+/* --- Personalización del Acordeón --- */
+
+/* 1. Cambia el color del botón CERRADO (colapsado) */
+.accordion-button.collapsed {
+    background-color: #E7ECEF;
+}
+
+/* 2. Cambia el color del botón ABIERTO (activo) */
+.accordion-button:not(.collapsed) {
+    background-color: #274C77; 
+    /* Texto blanco para que contraste con el azul */
+    color: #FFFFFF; 
+    /* Opcional: quita la sombra azul que pone Bootstrap por defecto */
+    box-shadow: none; 
+}
+
+/* 3. Cambia el color del ICONO (flecha) cuando está ABIERTO */
+.accordion-button:not(.collapsed)::after {
+    /* Este 'filtro' es un truco de CSS que usa Bootstrap
+      para cambiar el color del icono SVG a blanco.
+    */
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+/* 4. Cambia el color del CONTENIDO (el cuerpo) del acordeón */
+.accordion-body {
+    background-color: #E7ECEF;
+}
+
+/* 5. (Opcional) Cambia el color de los bordes del acordeón */
+.accordion-item {
+    border-color: #DDDDDD; /* Un gris neutro que combina */
 }
