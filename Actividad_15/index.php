@@ -1,3 +1,48 @@
+<?php
+    // Validación del formulario
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Constantes
+        define("USUARIO", "usuario_prueba");
+        define("CONTRASENA", "holamundo");
+
+        // Obtener y limpiar los datos
+        $usuario = trim($_POST['usuario']);
+        $contrasena = trim($_POST['contrasena']);
+        $color = trim($_POST['color']);
+        $tipo_sesion = trim($_POST['tipo-sesion']);
+
+        // Si algún campo está vacío
+        if (empty($usuario) || empty($contrasena) || empty($color) ||
+            empty($tipo_sesion)) {
+            $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    No puedes dejar los campos obligatorios vacíos
+                    </div>";
+        }
+        // Validación de credenciales
+        elseif (!($usuario == USUARIO) && !($contrasena == CONTRASENA)) {
+            $message = "<div class='alert alert-danger mt-2' role='alert'>
+                    Usuario o contraseña equivocada
+                    </div>";
+        }
+        else {
+            // Iniciar tipo de sesión
+            if ($tipo_sesion == 'sesion') {
+                // Inicar la sesión
+                session_start();
+
+                // Establecer los valores de la sesión
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['contrasena'] = $contrasena;
+                $_SESSION['color'] = $color;
+
+                // Redirigimos al archivo sesión_validad.php
+                header("Location: sesion_validada.php");
+                exit;
+            }
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,17 +73,11 @@
                         <div class="mb-2">
                             <span class="text-light">Color de texto que te gustaría:</span>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="color" id="azul" value="azul" required checked>
-                            <label class="form-check-label text-light" for="azul">
-                                Azul
-                            </label>
-                        </div>
 
                         <div class="form-check form-check-inline mb-3">
-                            <input class="form-check-input" type="radio" name="color" id="gris" value="gris" required>
-                            <label class="form-check-label text-light" for="gris">
-                                Gris
+                            <input class="form-check-input" type="radio" name="color" id="blanco" value="blanco" required checked>
+                            <label class="form-check-label text-light" for="blanco">
+                                Blanco
                             </label>
                         </div>
 
@@ -46,6 +85,22 @@
                             <input class="form-check-input" type="radio" name="color" id="morado" value="morado" required>
                             <label class="form-check-label text-light" for="morado">
                                 Morado
+                            </label>
+                        </div>
+
+                        <div class="mb-2">
+                            <span class="text-light">Tipo de sesión:</span>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo-sesion" id="sesion" value="sesion" required checked>
+                            <label class="form-check-label text-light" for="sesion">
+                                Sesión
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline mb-2">
+                            <input class="form-check-input" type="radio" name="tipo-sesion" id="cookie" value="cookie" required>
+                            <label class="form-check-label text-light" for="cookie">
+                                Cookies
                             </label>
                         </div>
 
@@ -61,36 +116,8 @@
                 </div>
             </div>
         </div>
-
-        <?php
-            // Validación del formulario
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                // Constantes
-                define("USUARIO", "usuario_prueba");
-                define("CONTRASENA", "holamundo");
-
-                // Obtener y limpiar los datos
-                $usuario = trim($_POST['usuario']);
-                $contrasena = trim($_POST['contrasena']);
-                $color = trim($_POST['color']);
-
-                // Si algún campo está vacío
-                if (empty($usuario) || empty($contrasena) || empty($color)) {
-                    echo "<div class='alert alert-warning mt-2' role='alert'>
-                            No puedes dejar los campos obligatorios vacíos
-                         </div>";
-                    exit;
-                }
-                
-                // Validación de credenciales
-                if (!($usuario == USUARIO) && !($contrasena == CONTRASENA)) {
-                    echo "<div class='alert alert-danger mt-2' role='alert'>
-                            Usuario o contraseña equivocada
-                         </div>";
-                    exit;
-                }
-            }
-        ?>
+        <!-- Mostrar mensajes de error-->
+        <?php if(!empty($message)) echo $message; ?>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
