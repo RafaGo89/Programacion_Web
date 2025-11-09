@@ -22,7 +22,7 @@
 
             if ($_SESSION['color'] == 'blanco') {
                 // Navegador para regresar al index
-            echo "<p class='text-light fs-5'>Veces que has iniciado sesión: {$_SESSION['contador_sesion']}</p>";
+            echo "<p class='text-light fs-5'>Veces que has iniciado sesión con session: {$_SESSION['contador_sesion']}</p>";
 
             echo "<p class='text-light fs-5'>Has inciado sesión :)</p>";
 
@@ -31,7 +31,7 @@
 
             if ($_SESSION['color'] == 'azul') {
                 // Navegador para regresar al index
-            echo "<p class='text-info fs-5'>Veces que has iniciado sesión: {$_SESSION['contador_sesion']}</p>";
+            echo "<p class='text-info fs-5'>Veces que has iniciado sesión con session: {$_SESSION['contador_sesion']}</p>";
 
             echo "<p class='text-info fs-5'>Has inciado sesión :)</p>";
 

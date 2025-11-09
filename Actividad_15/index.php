@@ -19,7 +19,7 @@
                     </div>";
         }
         // Validación de credenciales
-        elseif (!($usuario == USUARIO) && !($contrasena == CONTRASENA)) {
+        elseif (!($usuario == USUARIO) || !($contrasena == CONTRASENA)) {
             $message = "<div class='alert alert-danger mt-2' role='alert'>
                     Usuario o contraseña equivocada
                     </div>";
@@ -61,8 +61,10 @@
                 file_put_contents("contadores/contador_cookies.txt", $contador_sesion);
                 fclose($archivo);
 
-                // Inicar la cookie
+                // Inicar las cookies
                 setcookie('color', $color, time()+60);
+                setcookie('usuario', $usuario, time()+60);
+                setcookie('contrasena', $contrasena, time()+60);
 
                 // Iniciar cookies de cantidad de sesiones
                 setcookie('contador_cookies', $contador_sesion, time()+60);
