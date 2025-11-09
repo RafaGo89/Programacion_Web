@@ -30,17 +30,49 @@
                 // Inicar la sesión
                 session_start();
 
+                // Manejo de contador de sesiones
+                // Leer archivo
+                $archivo = fopen("contadores/contador_sesion.txt", "r+");
+                $contador_sesion = (int)fgets($archivo);
+                // Aumentamos en +1 la cantidad de incios de sesión
+                $contador_sesion+= 1;
+                // Escribimos en el archivo el nuevo valor de cantidad de sesiones
+                file_put_contents("contadores/contador_sesion.txt", $contador_sesion);
+                fclose($archivo);
+
                 // Establecer los valores de la sesión
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['contrasena'] = $contrasena;
                 $_SESSION['color'] = $color;
+                $_SESSION['contador_sesion'] = $contador_sesion;
 
                 // Redirigimos al archivo sesión_validad.php
-                header("Location: sesion_validada.php");
+                header("Location: sesion/sesion_validada.php");
                 exit;
             }
-        }
-    }
+            elseif ($tipo_sesion == 'cookie') {
+                // Manejo de contador de sesiones
+                // Leer archivo
+                $archivo = fopen("contadores/contador_cookies.txt", "r+");
+                $contador_sesion = (int)fgets($archivo);
+                // Aumentamos en +1 la cantidad de incios de sesión
+                $contador_sesion+= 1;
+                // Escribimos en el archivo el nuevo valor de cantidad de sesiones
+                file_put_contents("contadores/contador_cookies.txt", $contador_sesion);
+                fclose($archivo);
+
+                // Inicar la cookie
+                setcookie('color', $color, time()+60);
+
+                // Iniciar cookies de cantidad de sesiones
+                setcookie('contador_cookies', $contador_sesion, time()+60);
+
+                // Redirigimos al archivo sesión_validad.php
+                header("Location: cookie/cookie_validada.php");
+                exit;
+            } 
+        }     
+    }   
 ?>
 
 <!DOCTYPE html>
@@ -82,9 +114,9 @@
                         </div>
 
                         <div class="form-check form-check-inline mb-3">
-                            <input class="form-check-input" type="radio" name="color" id="morado" value="morado" required>
-                            <label class="form-check-label text-light" for="morado">
-                                Morado
+                            <input class="form-check-input" type="radio" name="color" id="azul" value="azul" required>
+                            <label class="form-check-label text-light" for="azul">
+                                Azul
                             </label>
                         </div>
 
@@ -100,7 +132,7 @@
                         <div class="form-check form-check-inline mb-2">
                             <input class="form-check-input" type="radio" name="tipo-sesion" id="cookie" value="cookie" required>
                             <label class="form-check-label text-light" for="cookie">
-                                Cookies
+                                Cookies (60 segundos)
                             </label>
                         </div>
 
