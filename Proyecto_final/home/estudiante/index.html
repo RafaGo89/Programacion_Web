@@ -24,24 +24,50 @@
         <h1 class="text-center mb-4 mt-3">Hola de nuevo, estudiante [Usuario]</h1>
         <hr>
         
-        <div class="row mx-1">
+        <div class="row mx-1 justify-content-center">
             <!-- Materias -->
             <div class="col-lg-3 col-md-6 col-12 mb-4">
                 <div class="card h-100">
                     <div class="card-body bg-secundario d-flex flex-column">
                         <h5 class="card-title text-center">Materias</h5>
                         <p class="card-text">Explora el catálogo de materias disponibles y envía tus solicitudes de inscripción a las que prefieras.</p>
-                        <a href="#" class="btn btn-accion me-3 mt-auto" data-bs-toggle="modal" data-bs-target="#modal-ver-materias">Materias</a>
+                        <div class="d-flex justify-content-center mt-auto">
+                            <a href="#" class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-ver-materias">Materias</a>
+                            <a href="#" class="btn btn-accion" data-bs-toggle="modal" data-bs-target="#modal-inscribirse">Inscribirse</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Modal materias-->
+
+            <!-- Model Tus materias -->
             <div class="modal fade" id="modal-ver-materias" tabindex="-1" aria-labelledby="modal-ver-materias-label" aria-hidden="true">
                 <div class="modal-dialog modal-lg  modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header bg-primario">
-                            <h1 class="modal-title fs-3" id="modal-ver-materias-label">Materias disponibles</h1>
+                            <h1 class="modal-title fs-3" id="modal-ver-materias-label">Tus materias</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                    <div>
+                                        <p class="mb-0"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
+                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
+                                    </div>
+                                    <a type="submit" class="btn btn-danger">Darse de baja</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal inscribirse-->
+            <div class="modal fade" id="modal-inscribirse" tabindex="-1" aria-labelledby="modal-inscribirse-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-inscribirse-label">Materias disponibles</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
