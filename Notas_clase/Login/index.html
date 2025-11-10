@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login PHP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>    
+    <form action="procesar.php" method="POST">
+        <h2>Iniciar sesión</h2>
+        <div>
+            <label for="usuario">Usuario</label>
+            <input type="email" name="usuario" id="usuario" required>
+        </div>
+        <div>
+            <label for="password">Contraseña</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div>
+            <label for="fork">Mantener la sesión abierta</label>
+            <input type="checkbox" name="fork" id="fork">
+        </div>
+        <div>
+            <input class="btn btn-info" type="submit" value="Ingresar">
+        </div>
+    </form>
+</body>
+</html>
