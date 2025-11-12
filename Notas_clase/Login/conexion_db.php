@@ -1,11 +1,12 @@
 <?php
     $host = "localhost";
-    $db_name "login_db_rafa";
+    $db_name = "login_prueba";
     $user = "root";
-    $password = "root";
+    $password = "";
+    $port = 3308; // Debido a que cambié el puerto del servidor de BD del WAMP
 
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $user, $password);
+        $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db_name;charset=utf8", $user, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         echo "Conexión exitosa!";
