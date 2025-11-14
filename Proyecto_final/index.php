@@ -1,3 +1,7 @@
+<?php 
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +28,7 @@
 
             <div class="derecha col d-flex flex-column justify-content-center px-4">
                 <div class="container bg-secundario rounded p-3 shadow">
-                    <form action="" method="">
+                    <form action="includes/validar_sesion.php" method="POST">
                         <div class="mb-3 text-center">
                             <h2>Inicia sesión</h2>
                         </div>
@@ -38,15 +42,26 @@
                             <input class="form-control" type="password" name="contrasena" id="contrasena" required>
                         </div>
 
-                        <div class="d-grid"><input class="btn btn-accion mb-3" type="submit" value="Iniciar sesión"></div>
+                        <div class="d-grid">
+                            <button class="btn btn-accion mb-3" type="submit">Iniciar sesión</button>
+                        </div>
                     </form>
                     <div class="mb-3 text-center">
                         <dv-m><span>¿Todavía no tienes cuenta? <a href="crear_cuenta.html">Crea una</a></span></dv-m>
                     </div>
                 </div>
+                <?php
+                // Mostrar mensaje de error sí lo hay
+                if (isset($_SESSION['mensaje_error'])) {
+
+                    echo $_SESSION['mensaje_error'];
+
+                    // Borrar el mensaje una vez se muestra
+                    unset($_SESSION['mensaje_error']);
+                }
+                ?>
             </div>
         </div>
-
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
