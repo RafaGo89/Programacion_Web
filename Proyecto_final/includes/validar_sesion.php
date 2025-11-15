@@ -10,13 +10,24 @@
                     No se pueden dejar campos vacíos
                     </div>";
 
-            $_SESSION['mensaje_error'] = $message;
+            $_SESSION['mensaje'] = $message;
             header("Location: ../index.php");
             exit;
         }
 
-        // --- Si no están vacíos, continuamos ---
-        $correo = $_POST['correo'];
+        // Validación de formato de correo
+        if (!filter_var($_POST["correo"], FILTER_VALIDATE_EMAIL)) {
+            $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Formato de correo electrónico inválido
+                    </div>";
+
+            $_SESSION['mensaje'] = $message;
+            header("Location: ../index.php");
+            exit; 
+        }
+
+        // --- Si no están vacíos y el correo tiene formato valido, continuamos ---
+        $correo = trim($_POST['correo']);
         $contrasena = $_POST['contrasena'];
 
         // Consulta para buscar si el correo está registrado en la bd
@@ -45,7 +56,7 @@
                     Correo o contraseña incorrecta
                     </div>";
 
-            $_SESSION['mensaje_error'] = $message;
+            $_SESSION['mensaje'] = $message;
             header("Location: ../index.php");
             exit;
         }
@@ -74,7 +85,7 @@
                     Rol de usuario no reconocido
                     </div>";
 
-                $_SESSION['mensaje_error'] = $message;
+                $_SESSION['mensaje'] = $message;
                 header("Location: ../index.php");
                 exit;
         }
@@ -86,7 +97,7 @@
                     Acceso no autorizado
                     </div>";
 
-        $_SESSION['mensaje_error'] = $message;
+        $_SESSION['mensaje'] = $message;
         header("Location: ../index.php");
         exit;
     }

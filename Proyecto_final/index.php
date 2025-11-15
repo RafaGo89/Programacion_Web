@@ -42,27 +42,54 @@
                             <input class="form-control" type="password" name="contrasena" id="contrasena" required>
                         </div>
 
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="mostrarPass">
+                            <label class="form-check-label" for="mostrarPass">
+                                Mostrar contraseña
+                            </label>
+                        </div>
+
                         <div class="d-grid">
                             <button class="btn btn-accion mb-3" type="submit">Iniciar sesión</button>
                         </div>
                     </form>
                     <div class="mb-3 text-center">
-                        <dv-m><span>¿Todavía no tienes cuenta? <a href="crear_cuenta.html">Crea una</a></span></dv-m>
+                        <dv-m><span>¿Todavía no tienes cuenta? <a href="crear_cuenta.php">Crea una</a></span></dv-m>
                     </div>
                 </div>
                 <?php
                 // Mostrar mensaje de error sí lo hay
-                if (isset($_SESSION['mensaje_error'])) {
+                if (isset($_SESSION['mensaje'])) {
 
-                    echo $_SESSION['mensaje_error'];
+                    echo $_SESSION['mensaje'];
 
                     // Borrar el mensaje una vez se muestra
-                    unset($_SESSION['mensaje_error']);
+                    unset($_SESSION['mensaje']);
                 }
                 ?>
             </div>
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+        <script>
+        // 1. Seleccionamos los dos elementos que acabamos de crear
+        const inputContrasena = document.getElementById('contrasena');
+        const checkMostrar = document.getElementById('mostrarPass');
+
+        // 2. Agregamos un "escuchador" al checkbox
+        // que se activa CADA VEZ que cambia (se marca o desmarca)
+        checkMostrar.addEventListener('change', function() {
+            
+            // 3. Comprobamos si el checkbox está MARCADO
+            if (this.checked) {
+                // Si está marcado, cambiamos el tipo del input a "text"
+                inputContrasena.type = 'text';
+            } else {
+                // Si no está marcado, lo regresamos a "password"
+                inputContrasena.type = 'password';
+            }
+        });
+    </script>
 </body>
 </html>
