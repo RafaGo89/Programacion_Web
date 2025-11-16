@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../assets/imgs/favicon.png" type="image/png" sizes="48x48">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../assets/css/estilos_panel.css">
+    <title>Tablero</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="container-fluid d-flex justify-content-between py-2 bg-primario">  
+        <div class="d-flex">
+            <img src="../../assets/imgs/logo.png" alt="logo_escuela" width="60px" height="60px">
+        </div>
+
+        <div class="d-flex align-items-center">
+            <a href="../../cerrar_sesion.php" class="pe-1 fw-bold">Cerrar sesión</a>
+            <img src="../../assets/imgs/usuario_foto.png" alt="logo_escuela" width="50px" height="50px">
+        </div>  
+    </header>
+
+    <main class="container-fluid flex-grow-1 text-center my-2">
+        <h1 class="text-center mb-4 mt-3">Hola de nuevo, administrador [Usuario]</h1>
+        <hr>
+
+        <!-- Gestionar estudiantes -->
+        <div class="row mx-1 justify-content-center">
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body bg-secundario d-flex flex-column">
+                        <h5 class="card-title text-center">Estudiantes</h5>
+                        <p class="card-text">Gestiona los perfiles de los estudiantes. Crea nuevas cuentas, edita o elimina perfiles existentes o consulta la lista completa.</p>
+                        <div class="d-flex justify-content-center mt-auto">
+                            <a href="#" class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-estudiante">Crear</a>
+                            <a href="#" class="btn btn-accion" data-bs-toggle="modal" data-bs-target="#modal-ver-estudiantes">Ver estudiantes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Crear estudiante -->
+            <div class="modal fade" id="modal-crear-estudiante" tabindex="-1" aria-labelledby="modal-crear-estudiante-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-crear-estudiante-label">Nuevo estudiante</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario -->
+                            <form action="" method="">
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="nombres">Nombres</label>
+                                    <input class="form-control" type="text" name="nombres" id="nombres_est" placeholder="Rafael" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-3 text-start">
+                                        <label class="form-label fw-bold fs-5" for="a_paterno">Apellido paterno</label>
+                                        <input class="form-control" type="text" name="a_paterno" id="a_paterno_est" placeholder="Rodríguez" required>
+                                    </div>
+                                    <div class="col mb-3 text-start">
+                                        <label class="form-label fw-bold fs-5" for="a_materno">Apellido materno</label>
+                                        <input class="form-control" type="text" name="a_materno" id="a_materno_est" placeholder="Gómez" required>
+                                    </div>
+                                </div>
+                                 <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="correo">Correo electrónico</label>
+                                    <input class="form-control" type="email" name="correo" id="correo_est" placeholder="nombre@ejemplo.com" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="contrasena">Contraseña</label>
+                                    <input class="form-control" type="password" name="contrasena" id="contrasena_est" required>
+                                </div>
+
+                                <div class="form-check mb-3 text-start">
+                                    <input class="form-check-input" type="checkbox" data-toggle-password-for="contrasena_est" id="mostrar_pass_est">
+                                    <label class="form-check-label" for="mostrar_pass_est">
+                                        Mostrar contraseña
+                                    </label>
+                                </div>
+
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="tipo-cuenta-visual_est">Tipo de cuenta</label>
+                                    <input class="form-control" type="text" id="tipo-cuenta-visual_est" value="Alumno" disabled>                                    
+                                    <input type="hidden" name="rol" value="3">
+                                </div>
+
+                                <div class="d-grid">
+                                    <input class="btn btn-accion mb-3" type="submit" value="Crear cuenta">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Ver estudiantes -->
+            <div class="modal fade" id="modal-ver-estudiantes" tabindex="-1" aria-labelledby="modal-ver-estudiantes-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-ver-estudiantes-label">Estudiantes</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                    <div>
+                                        <p class="my-1 text-start"><span class="fw-bold">Estudiante:</span> Rafael Rodríguez</p>
+                                        <p class="text-start"><span class="fw-bold">id:</span> 1</p>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="button" class="btn btn-accion w-100">Editar</button>
+                                        <button type="button" class="btn btn-danger w-100">Eliminar</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestionar profesores -->
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body bg-secundario d-flex flex-column">
+                        <h5 class="card-title text-center">Profesores</h5>
+                        <p class="card-text text-center">Administra el personal docente. Registra nuevos profesores, elimina sus cuentas, modifica sus datos o consulta el directorio de la academia.</p>
+                        <div class="d-flex justify-content-center mt-auto">
+                            <a href="#" class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-profesor">Crear</a>
+                            <a href="#" class="btn btn-accion" data-bs-toggle="modal" data-bs-target="#modal-ver-profesores">Ver profesores</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Crear profesor -->
+            <div class="modal fade" id="modal-crear-profesor" tabindex="-1" aria-labelledby="modal-crear-profesor-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-crear-profesor-label">Nuevo profesor</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario -->
+                            <form action="" method="">
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="nombres">Nombres</label>
+                                    <input class="form-control" type="text" name="nombres" id="nombres_prof" placeholder="Rafael" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-3 text-start">
+                                        <label class="form-label fw-bold fs-5" for="a_paterno">Apellido paterno</label>
+                                        <input class="form-control" type="text" name="a_paterno" id="a_paterno_prof" placeholder="Rodríguez" required>
+                                    </div>
+                                    <div class="col mb-3 text-start">
+                                        <label class="form-label fw-bold fs-5" for="a_materno">Apellido materno</label>
+                                        <input class="form-control" type="text" name="a_materno" id="a_materno_prof" placeholder="Gómez" required>
+                                    </div>
+                                </div>
+                                 <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="correo">Correo electrónico</label>
+                                    <input class="form-control" type="email" name="correo" id="correo_prof" placeholder="nombre@ejemplo.com" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="contrasena">Contraseña</label>
+                                    <input class="form-control" type="password" name="contrasena" id="contrasena_prof" required>
+                                </div>
+
+                                <div class="form-check mb-3 text-start">
+                                    <input class="form-check-input" type="checkbox" data-toggle-password-for="contrasena_prof" id="mostrar_pass_prof">
+                                    <label class="form-check-label" for="mostrar_pass_prof">
+                                        Mostrar contraseña
+                                    </label>
+                                </div>
+
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="tipo-cuenta-visual_prof">Tipo de cuenta</label>
+                                    <input class="form-control" type="text" id="tipo-cuenta-visual_prof" value="Profesor" disabled>                                    
+                                    <input type="hidden" name="rol" value="2">
+                                </div>
+
+                                <div class="d-grid">
+                                    <input class="btn btn-accion mb-3" type="submit" value="Crear cuenta">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Ver profesores -->
+            <div class="modal fade" id="modal-ver-profesores" tabindex="-1" aria-labelledby="modal-ver-profesores-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-ver-profesores-label">Profesores</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                    <div>
+                                        <p class="my-1 text-start"><span class="fw-bold">Profesor:</span> Rafael Rodríguez</p>
+                                        <p class="text-start"><span class="fw-bold">id:</span> 1</p>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="button" class="btn btn-accion w-100">Editar</button>
+                                        <button type="button" class="btn btn-danger w-100">Eliminar</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestionar materias -->
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body bg-secundario d-flex flex-column">
+                        <h5 class="card-title text-center">Materias</h5>
+                        <p class="card-text">Administra el catálogo de materias. Crea nuevas asignaturas, asígnalas a profesores, eliminalas o edita el plan de estudios.</p>
+                        <div class="d-flex justify-content-center mt-auto">
+                            <a href="#" class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-materia">Crear</a>
+                            <a href="#" class="btn btn-accion" data-bs-toggle="modal" data-bs-target="#modal-ver-materias">Ver materias</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Crear materias -->
+            <div class="modal fade" id="modal-crear-materia" tabindex="-1" aria-labelledby="modal-crear-materia-label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-crear-materia-label">Nueva materia</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="">
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="nombre_materia">Nombre de la materia</label>
+                                    <input class="form-control" type="text" name="nombre_materia" id="nombre_materia" placeholder="Estadística I" required>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="profesor">Profesor</label>
+                                    <select class="form-select" for="profesor" aria-label="Default select example">
+                                        <option selected>Escoga un profesor</option>
+                                        <option value="1">1- Fabian Juarez Cortes</option>
+                                        <option value="2">2 - Camilo Castro Gómez</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label fw-bold fs-5" for="descripcion">Descripción</label>
+                                    <textarea class="form-control" for="descripcion" placeholder="Escriba la descripción de su materia" id="descripcion" style="height: 200px"></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-accion">Crear materia</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Ver materias -->
+            <div class="modal fade" id="modal-ver-materias" tabindex="-1" aria-labelledby="modal-ver-materias-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-ver-materias-label">Materias</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                    <div>
+                                        <p class="my-1 text-start"><span class="fw-bold">Materia:</span> Estadística II</p>
+                                        <p class="my-1 text-start"><span class="fw-bold">Profesor:</span> Rafael Rodríguez Gómez</p>
+                                        <p class="text-start"><span class="fw-bold">id materia:</span> 1</p>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="button" class="btn btn-accion w-100">Editar</button>
+                                        <button type="button" class="btn btn-danger w-100">Eliminar</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="container-fluid d-flex justify-content-between py-2 mt-3 bg-primario">
+        <div>
+            <span>&copy;Centro Educativo "Integra" 2025</span>
+        </div>
+        <div>
+            <img class="mx-2" src="../../assets/imgs/instagram_logo.png" alt="instagram_logo" width="30px" height="30px">
+            <img src="../../assets/imgs/facebook_logo.png" alt="facebook_logo" width="30px" height="30px">
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script src="../../assets/js/mostrar_password.js" defer></script>
+</body>
+</html>

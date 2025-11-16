@@ -1,4 +1,10 @@
+header a {
+    color: #333536;
+}
 
+header a:hover {
+    color: #585b5c;
+}
 
 .bg-primario {
     background-color: #6096BA;

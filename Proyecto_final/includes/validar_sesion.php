@@ -73,6 +73,7 @@
         // Reedirección según el rol
         switch ($_SESSION['id_rol']) {
             case 1:
+                header("Location: ../home/admin");
                 break;
             case 2:
                 header("Location: ../home/profesor");
