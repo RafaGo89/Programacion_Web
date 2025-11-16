@@ -22,7 +22,7 @@ INSERT INTO roles (nombre) VALUES
 -- Almacena información de nuestros usuarios
 CREATE TABLE usuarios (
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	nombre VARCHAR(40) NOT NULL,
+	nombres VARCHAR(40) NOT NULL,
 	a_paterno VARCHAR(50) NOT NULL,
 	a_materno VARCHAR(50) NOT NULL,
 	correo VARCHAR(100) NOT NULL UNIQUE,
