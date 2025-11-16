@@ -14,12 +14,11 @@
 </head>
 <body>
     <main class="container d-flex justify-content-center align-items-center">
-        <div class="formulario bg-secundario px-3 py-2 rounded shadow-lg">
-            <form action="includes/nuevo_usuario.php" method="POST">
-                <div class="mb-2 text-center">
+        <div class="formulario bg-secundario rounded shadow-lg">
+            <div class="container-fluid mb-2 text-center bg-primario p-2 rounded-top">
                     <h2>Crear cuenta</h2>
-                </div>
-
+            </div>
+            <form class="px-3 py-2" action="includes/nuevo_usuario.php" method="POST">            
                 <?php
                     // Mostrar mensaje de error sí lo hay
                     if (isset($_SESSION['mensaje'])) {
@@ -32,28 +31,28 @@
                 ?>
 
                 <div class="mb-2">
-                    <label class="form-label" for="nombres">Nombres</label>
+                    <label class="form-label fw-bold fs-5" for="nombres">Nombres</label>
                     <input class="form-control" type="text" name="nombres" id="nombres" placeholder="Rafael" required>
                 </div>
 
                 <div class="row">
                     <div class="col mb-2">
-                        <label class="form-label" for="a_paterno">Apellido paterno</label>
+                        <label class="form-label fw-bold fs-5" for="a_paterno">Apellido paterno</label>
                         <input class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Rodríguez" required>
                     </div>
                     <div class="col mb-2">
-                        <label class="form-label" for="a_materno">Apellido materno</label>
+                        <label class="form-label fw-bold fs-5" for="a_materno">Apellido materno</label>
                         <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Gómez" required>
                     </div>
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label"for="correo">Correo electrónico</label>
+                    <label class="form-label fw-bold fs-5"for="correo">Correo electrónico</label>
                     <input class="form-control" type="email" name="correo" id="correo" placeholder="nombre@ejemplo.com" required>
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label" for="contrasena">Contraseña</label>
+                    <label class="form-label fw-bold fs-5" for="contrasena">Contraseña</label>
                     <input class="form-control" type="password" name="contrasena" id="contrasena" required>
                 </div>
 
@@ -65,7 +64,7 @@
                 </div>
 
                 <div class="mb-2">
-                    <span>Tipo de cuenta</span>
+                    <span class="fw-bold fs-5">Tipo de cuenta</span>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="rol" id="alumno" value=3 required>
@@ -82,7 +81,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <input class="btn btn-accion mb-3" type="submit" value="Crear cuenta">
+                    <input class="btn btn-accion mb-3 fs-5" type="submit" value="Crear cuenta">
                 </div>
             </form>
         </div>

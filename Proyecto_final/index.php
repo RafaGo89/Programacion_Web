@@ -33,12 +33,12 @@
                             <h2>Inicia sesión</h2>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label"for="correo">Correo electrónico</label>
+                            <label class="form-label fw-bold fs-5" for="correo">Correo electrónico</label>
                             <input class="form-control" type="email" name="correo" id="correo" placeholder="nombre@ejemplo.com" required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label"for="contrasena">Contraseña</label>
+                            <label class="form-label fw-bold fs-5"for="contrasena">Contraseña</label>
                             <input class="form-control" type="password" name="contrasena" id="contrasena" required>
                         </div>
 
