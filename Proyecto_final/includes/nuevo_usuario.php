@@ -28,6 +28,17 @@
             exit; 
         }
 
+        // Validación de rol
+        if ($_POST["rol"] != "2" && $_POST["rol"] != "3") {
+            $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Rol de cuenta inválido
+                    </div>";
+
+            $_SESSION['mensaje'] = $message;
+            header("Location: ../crear_cuenta.php");
+            exit; 
+        }
+
         // --- Si no están vacíos y el correo es válido, continuamos ---
         $nombres = trim($_POST['nombres']);
         $a_paterno = trim($_POST['a_paterno']);
