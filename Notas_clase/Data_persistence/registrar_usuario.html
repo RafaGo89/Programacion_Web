@@ -1,0 +1,59 @@
+<?
+    /*
+    * Recuerda:
+    *   Activamos el manejo de sesiones: session_start();
+    * Ademas:
+    *   Es necesario verificamos si el usuario ha iniciado sesión correctamente.
+    *   Si no existe la variable de sesión 'usuario_id', lo redirigimos al inicio.
+    *   Esto evita que alguien sin permisos acceda directamente al script por la URL.
+    */
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+  <script>
+
+    // Esta función se ejecuta al intentar enviar el formulario
+    // Su objetivo es verificar que ambas contraseñas coincidan antes de enviarlas al servidor
+
+    function validarFormulario() {
+      const pass = document.getElementById("password").value;
+      const confirmPass = document.getElementById("confirm_password").value;
+
+      if (pass !== confirmPass) {
+        alert("Las contraseñas no coinciden."); // Se muestra un mensaje de error si no son iguales
+        return false; // Evita el envío del formulario
+      }
+      return true; // Permite el envío si las contraseñas coinciden
+    }
+  </script>
+</head>
+<body>
+    <h2>Registro</h2>
+    
+    <!-- El atributo 'onsubmit' llama a la función de validación antes de enviar los datos -->    
+    <form action="procesar_usuario.php" method="POST" onsubmit="return validarFormulario();">
+        <label>Nombres:</label>
+        <input type="text" name="nombres" ><br><br>
+
+        <label>Apellido Paterno:</label>
+        <input type="text" name="a_paterno" ><br><br>
+
+        <label>Apellido Materno:</label>
+        <input type="text" name="a_materno"><br><br>
+
+        <label>Correo Electrónico:</label>
+        <input type="email" name="correo" ><br><br>
+
+        <label>Contraseña:</label>
+        <input type="password" name="password" id="password" required><br><br>
+
+        <label>Confirmar Contraseña:</label>
+        <input type="password" name="confirm_password" id="confirm_password" required><br><br>
+
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>
