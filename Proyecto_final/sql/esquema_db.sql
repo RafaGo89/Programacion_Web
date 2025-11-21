@@ -18,6 +18,18 @@ INSERT INTO roles (nombre) VALUES
 ('Estudiante'),
 ('Invitado');
 
+-- Tabla estatus
+-- Almacena los estatus de las materias y lo Usuarios
+CREATE TABLE estatus (
+    id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    estado VARCHAR(20) NOT NULL 
+) ENGINE=InnoDB;
+
+INSERT INTO estatus (estado) VALUES
+('Inactivo'),
+('Activo'),
+('Baja');
+
 -- Tabla Usuarios
 -- Almacena información de nuestros usuarios
 CREATE TABLE usuarios (
@@ -28,10 +40,15 @@ CREATE TABLE usuarios (
 	correo VARCHAR(100) NOT NULL UNIQUE,
 	contrasena VARCHAR(255) NOT NULL,
 	id_rol TINYINT UNSIGNED NOT NULL,
+	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	fecha_modificacion DATETIME,
 	
 	FOREIGN KEY (id_rol) REFERENCES roles(id)
+	ON UPDATE CASCADE
+	ON DELETE RESTRICT,
+	
+	FOREIGN KEY (id_estatus) REFERENCES estatus(id)
 	ON UPDATE CASCADE
 	ON DELETE RESTRICT
 ) ENGINE=INNODB;
@@ -43,10 +60,15 @@ CREATE TABLE materias (
 	nombre VARCHAR(50) NOT NULL,
 	descripcion TEXT,
 	id_profesor INT UNSIGNED NOT NULL,
+	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 1,
 	fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	fecha_modificacion DATETIME,
 	
 	FOREIGN KEY (id_profesor) REFERENCES usuarios(id)
+	ON UPDATE CASCADE
+	ON DELETE RESTRICT,
+	
+	FOREIGN KEY (id_estatus) REFERENCES estatus(id)
 	ON UPDATE CASCADE
 	ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -63,6 +85,7 @@ CREATE TABLE solicitudes (
 	FOREIGN KEY (id_alumno) REFERENCES usuarios(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE,
+	
 	FOREIGN KEY (id_materia) REFERENCES materias(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE
@@ -93,10 +116,12 @@ CREATE TABLE calificaciones (
 	id_alumno INT UNSIGNED NOT NULL,
 	calificacion DECIMAL(5,2) NOT NULL,
 	fecha_entrega DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	esta_calificada BOOLEAN DEFAULT false,
 	
 	FOREIGN KEY (id_tarea) REFERENCES tareas(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE,
+	
 	FOREIGN KEY (id_alumno) REFERENCES usuarios(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE

@@ -14,6 +14,10 @@ header a:hover {
     background-color: #E7ECEF;
 }
 
+.bg-terciario {
+    background-color: #274C77;
+}
+
 /* --- Mis Botones Personalizados --- */
 .btn-accion {
     background-color: #274C77; 
@@ -61,4 +65,9 @@ header a:hover {
 /* 5. (Opcional) Cambia el color de los bordes del acordeón */
 .accordion-item {
     border-color: #DDDDDD; /* Un gris neutro que combina */
+}
+
+.table thead th {
+    background-color: #274C77;
+    color: #FFFFFF;
 }

@@ -54,7 +54,7 @@
                         </div>
                     </form>
                     <div class="mb-3 text-center">
-                        <dv-m><span>¿Todavía no tienes cuenta? <a href="crear_cuenta.php">Crea una</a></span></dv-m>
+                        <dv-m><span>¿Eres estudiante y todavía no tienes cuenta? <a href="crear_cuenta.php">Crea una</a></span></dv-m>
                     </div>
                 </div>
                 <?php

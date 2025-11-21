@@ -29,7 +29,7 @@
         }
 
         // Validación de rol
-        if ($_POST["rol"] != "2" && $_POST["rol"] != "3") {
+        if ($_POST["rol"] != "2") {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Rol de cuenta inválido
                     </div>";

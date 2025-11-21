@@ -63,21 +63,10 @@
                     </label>
                 </div>
 
-                <div class="mb-2">
-                    <span class="fw-bold fs-5">Tipo de cuenta</span>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rol" id="alumno" value=3 required>
-                    <label class="form-check-label" for="alumno">
-                        Alumno
-                    </label>
-                </div>
-
-                <div class="form-check form-check-inline mb-3">
-                    <input class="form-check-input" type="radio" name="rol" id="profesor" value=2 required>
-                    <label class="form-check-label" for="profesor">
-                        Profesor
-                    </label>
+                <div class="mb-3 text-start">
+                    <label class="form-label fw-bold fs-5" for="tipo-cuenta-visual">Tipo de cuenta</label>
+                    <input class="form-control" type="text" id="tipo-cuenta-visual" value="Alumno" disabled>                                    
+                    <input type="hidden" name="rol" value="3">
                 </div>
 
                 <div class="d-grid">
