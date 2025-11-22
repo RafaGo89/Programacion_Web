@@ -13,7 +13,7 @@ CREATE TABLE roles (
 ) ENGINE=InnoDB;
 
 INSERT INTO roles (nombre) VALUES
-('Aministrador'),
+('Administrador'),
 ('Profesor'),
 ('Estudiante'),
 ('Invitado');
@@ -28,7 +28,8 @@ CREATE TABLE estatus (
 INSERT INTO estatus (estado) VALUES
 ('Inactivo'),
 ('Activo'),
-('Baja');
+('Baja'),
+('Eliminado');
 
 -- Tabla Usuarios
 -- Almacena información de nuestros usuarios
@@ -40,7 +41,7 @@ CREATE TABLE usuarios (
 	correo VARCHAR(100) NOT NULL UNIQUE,
 	contrasena VARCHAR(255) NOT NULL,
 	id_rol TINYINT UNSIGNED NOT NULL,
-	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 1,
+	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 2,
 	fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	fecha_modificacion DATETIME,
 	
@@ -58,9 +59,9 @@ CREATE TABLE usuarios (
 CREATE TABLE materias (
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	nombre VARCHAR(50) NOT NULL,
-	descripcion TEXT,
+	descripcion TEXT NOT NULL,
 	id_profesor INT UNSIGNED NOT NULL,
-	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 1,
+	id_estatus TINYINT UNSIGNED NOT NULL DEFAULT 2,
 	fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	fecha_modificacion DATETIME,
 	

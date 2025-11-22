@@ -64,16 +64,16 @@
         // --- SI LLEGAMOS AQUÍ, EL LOGIN FUE EXITOSO ---
         $_SESSION['id_usuario'] = $datos_usuario['id'];
         
-        $_SESSION['nombre_completo'] = $datos_usuario['nombres'] . 
-                                        $datos_usuario['a_paterno'] .
-                                        $datos_usuario['a_materno'];
+        $_SESSION['nombres'] = $datos_usuario['nombres'];
+        $_SESSION['a_paterno'] = $datos_usuario['a_paterno'];
+        $_SESSION['a_materno'] = $datos_usuario['a_materno'];                                        
 
         $_SESSION['id_rol'] = $datos_usuario['id_rol'];
         
         // Reedirección según el rol
         switch ($_SESSION['id_rol']) {
             case 1:
-                header("Location: ../home/admin");
+                header("Location: ../home/admin/index.php");
                 break;
             case 2:
                 header("Location: ../home/profesor");

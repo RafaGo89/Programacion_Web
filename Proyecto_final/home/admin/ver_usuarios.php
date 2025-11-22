@@ -1,3 +1,24 @@
+<?php
+    session_start();
+
+    require_once("../../includes/conexion_bd.php");
+
+    // Variables
+    $usuarios = [];
+
+    // Queries para obtener datos de la base de datos
+    $usuarios = $pdo->query("SELECT U.id, U.nombres,
+                                    U.a_paterno, U.a_materno,
+                                    U.correo, R.nombre AS rol,
+                                    E.estado, U.fecha_creacion,
+                                    U.fecha_modificacion
+                                FROM usuarios as U
+                                INNER JOIN roles AS R
+                                ON U.id_rol = R.id
+                                INNER JOIN estatus AS E
+                                ON U.id_estatus = E.id;")->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,14 +45,14 @@
         <h1 class="text-center mb-4 mt-3">Lista de usuarios</h1>
         <hr>
 
-        <table class="table table-striped table-hover table align-middle">
+        <table class="table table-striped table-hover align-middle">
             <caption>Lista de usuarios</caption>
             <thead>
-                <tr>
+                <tr class="align-middle">
                     <th scope="col">Id</th>
                     <th scope="col">Nombres</th>
-                    <th scope="col">A paterno</th>
-                    <th scope="col">A materno</th>
+                    <th scope="col">A. paterno</th>
+                    <th scope="col">A. materno</th>
                     <th scope="col">Correo</th>
                     <th scope="col">Rol</th>
                     <th scope="col">Estatus</th>
@@ -41,22 +62,26 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Rafael</td>
-                    <td>Rodríguez</td>
-                    <td>Gómez</td>
-                    <td>rafa@ejemplo.com</td>
-                    <td>Estudiante</td>
-                    <td>Baja</td>
-                    <td>12/12/25 12:00 pm</td>
-                    <td>13/12/25 01:00 pm</td>
-                    <td>
-                        <button type="button" class="btn btn-accion">Editar</button>
-                        <button type="button" class="btn btn-danger">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
+                <?php  foreach ($usuarios as $usuario):?>
+                    <tr>
+                        <th scope="row"><?= $usuario['id'] ?></th>
+                        <td><?= $usuario['nombres'] ?></td>
+                        <td><?= $usuario['a_paterno'] ?></td>
+                        <td><?= $usuario['a_materno'] ?></td>
+                        <td><?= $usuario['correo'] ?></td>
+                        <td><?= $usuario['rol'] ?></td>
+                        <td><?= $usuario['estado'] ?></td>
+                        <td><?= $usuario['fecha_creacion'] ?></td>
+                        <td><?= $usuario['fecha_modificacion'] ?></td>
+                        <td>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-accion me-2">Editar</button>
+                                <button type="button" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>            
         </table>
     </main>
 

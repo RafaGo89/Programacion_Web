@@ -2,6 +2,17 @@
     session_start();
     require "conexion_bd.php";
 
+    $ruta = "";
+
+    // Definimos la ruta para regresar dependiendo si el admin está creando
+    // una cuenta, o si la está creando un usuario
+    if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
+        $ruta = "../home/admin/index.php";
+    }
+    else {
+        $ruta = "../crear_cuenta.php";
+    }
+
     // Asegurarse que se envío algo por el formulario
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // PRIMER CASO DE ERROR: Campos vacíos
@@ -13,7 +24,7 @@
                     </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: ../crear_cuenta.php");
+                header("Location: {$ruta}");
                 exit; 
         }
 
@@ -24,19 +35,22 @@
                     </div>";
 
             $_SESSION['mensaje'] = $message;
-            header("Location: ../crear_cuenta.php");
+            header("Location: {$ruta}");
             exit; 
         }
 
-        // Validación de rol
-        if ($_POST["rol"] != "2") {
-            $message = "<div class='alert alert-warning mt-2' role='alert'>
+        // Si el admin no está creando la cuenta, solo se pueden crear cuentas
+        // de tipo alumno
+        if (!isset($_SESSION['id_rol']) && $_SESSION['id_rol'] != 1) {
+            if ($_POST["rol"] != "3") {
+                $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Rol de cuenta inválido
                     </div>";
 
-            $_SESSION['mensaje'] = $message;
-            header("Location: ../crear_cuenta.php");
-            exit; 
+                $_SESSION['mensaje'] = $message;
+                header("Location: {$ruta}");
+                exit; 
+            }
         }
 
         // --- Si no están vacíos y el correo es válido, continuamos ---
@@ -66,7 +80,7 @@
                     </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: ../crear_cuenta.php");
+                header("Location: {$ruta}");
                 exit; 
         }
 
@@ -90,11 +104,11 @@
         // Si la inserción tuvo éxito regresamos al login
         if ($resultado) {
             $message = "<div class='alert alert-success mt-2' role='alert'>
-                    ¡Cuenta creada con éxito! Ya puedes iniciar sesión.
+                    ¡Cuenta creada con éxito!
                     </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: ../index.php");
+                header("Location: {$ruta}");
                 exit; 
         }
 
@@ -104,7 +118,7 @@
 
         // Si hubo algún error en la base de datos
         $_SESSION['mensaje'] = $message;
-        header("Location: ../crear_cuenta.php");
+        header("Location: {$ruta}");
         exit;
 
     }

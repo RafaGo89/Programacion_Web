@@ -1,3 +1,20 @@
+<?php
+    session_start();
+
+    require_once("../../includes/conexion_bd.php");
+
+    // Variables
+    $roles = [];
+    $profesores = [];
+
+    // Queries para obtener datos de la base de datos
+    $roles = $pdo->query("SELECT id, nombre FROM roles")->fetchAll(PDO::FETCH_ASSOC);
+    $profesores = $pdo->query("SELECT id, 
+                              CONCAT(nombres, ' ', a_paterno, ' ', a_materno) as nombre
+                              FROM usuarios
+                              WHERE id_rol = 2")->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,8 +38,21 @@
     </header>
 
     <main class="container-fluid flex-grow-1 text-center my-2">
-        <h1 class="text-center mb-4 mt-3">Hola de nuevo, administrador [Usuario]</h1>
+        <?php
+            echo "<h1 class='text-center mb-4 mt-3'>Hola de nuevo, administrador $_SESSION[nombres]</h1>";
+        ?>
         <hr>
+
+        <?php
+            // Mostrar mensaje de error sí lo hay
+            if (isset($_SESSION['mensaje'])) {
+
+            echo $_SESSION['mensaje'];
+
+            // Borrar el mensaje una vez se muestra
+            unset($_SESSION['mensaje']);
+            }
+        ?>
 
         <!-- Gestionar usuarios -->
         <div class="row mx-1 justify-content-center">
@@ -33,7 +63,7 @@
                         <p class="card-text">Gestiona los perfiles de los usuarios. Crea nuevas cuentas, edita o elimina perfiles existentes o consulta la lista completa.</p>
                         <div class="d-flex justify-content-center mt-auto">
                             <a class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-estudiante">Crear</a>
-                            <a href="ver_usuarios.html" class="btn btn-accion">Ver estudiantes</a>
+                            <a href="ver_usuarios.php" class="btn btn-accion">Ver usuarios</a>
                         </div>
                     </div>
                 </div>
@@ -49,44 +79,46 @@
                         </div>
                         <div class="modal-body">
                             <!-- Formulario -->
-                            <form action="" method="">
+                            <form action="../../includes/nuevo_usuario.php" method="POST">
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="nombres">Nombres</label>
-                                    <input class="form-control" type="text" name="nombres" id="nombres_est" placeholder="Rafael" required>
+                                    <input class="form-control" type="text" name="nombres" id="nombres" placeholder="Rafael" required>
                                 </div>
                                 <div class="row">
                                     <div class="col mb-3 text-start">
                                         <label class="form-label fw-bold fs-5" for="a_paterno">Apellido paterno</label>
-                                        <input class="form-control" type="text" name="a_paterno" id="a_paterno_est" placeholder="Rodríguez" required>
+                                        <input class="form-control" type="text" name="a_paterno" id="a_paterno" placeholder="Rodríguez" required>
                                     </div>
                                     <div class="col mb-3 text-start">
                                         <label class="form-label fw-bold fs-5" for="a_materno">Apellido materno</label>
-                                        <input class="form-control" type="text" name="a_materno" id="a_materno_est" placeholder="Gómez" required>
+                                        <input class="form-control" type="text" name="a_materno" id="a_materno" placeholder="Gómez" required>
                                     </div>
                                 </div>
                                  <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="correo">Correo electrónico</label>
-                                    <input class="form-control" type="email" name="correo" id="correo_est" placeholder="nombre@ejemplo.com" required>
+                                    <input class="form-control" type="email" name="correo" id="correo" placeholder="nombre@ejemplo.com" required>
                                 </div>
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="contrasena">Contraseña</label>
-                                    <input class="form-control" type="password" name="contrasena" id="contrasena_est" required>
+                                    <input class="form-control" type="password" name="contrasena" id="contrasena" required>
                                 </div>
 
                                 <div class="form-check mb-3 text-start">
-                                    <input class="form-check-input" type="checkbox" data-toggle-password-for="contrasena_est" id="mostrar_pass_est">
-                                    <label class="form-check-label" for="mostrar_pass_est">
+                                    <input class="form-check-input" type="checkbox" data-toggle-password-for="contrasena" id="mostrar_pass">
+                                    <label class="form-check-label" for="mostrar_pass">
                                         Mostrar contraseña
                                     </label>
                                 </div>
 
                                 <div class="mb-3 text-start">
-                                    <label class="form-label fw-bold fs-5" for="contrasena">Tipo de cuenta</label>
-                                    <select class="form-select" for="profesor" aria-label="Default select example">
-                                        <option selected>Escoga un tipo de cuenta</option>
-                                        <option value="1">1- Administrador</option>
-                                        <option value="2">2 - Profesor</option>
-                                        <option value="3">3 - Alumno</option>
+                                    <label class="form-label fw-bold fs-5" for="rol">Tipo de cuenta</label>
+                                    <select class="form-select" name="rol" for="rol" id="rol" aria-label="Default select example" required>
+                                        <option value="" selected disable>Escoga un tipo de cuenta</option>
+                                        <?php foreach($roles as $rol): ?>                                            
+                                            <option value= "<?= $rol['id'] ?>">
+                                                <?= htmlspecialchars($rol['id'] . "- " . $rol['nombre']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
 
@@ -148,22 +180,25 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="">
+                            <form action="../../includes/nueva_materia.php" method="POST">
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="nombre_materia">Nombre de la materia</label>
                                     <input class="form-control" type="text" name="nombre_materia" id="nombre_materia" placeholder="Estadística I" required>
                                 </div>
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="profesor">Profesor</label>
-                                    <select class="form-select" for="profesor" aria-label="Default select example">
-                                        <option selected>Escoga un profesor</option>
-                                        <option value="1">1- Fabian Juarez Cortes</option>
-                                        <option value="2">2 - Camilo Castro Gómez</option>
+                                    <select class="form-select" name="id_profesor" id="profesor" for="profesor" aria-label="Default select example" required>
+                                        <option selected disabled value="" >Escoga un profesor</option>
+                                        <?php foreach($profesores as $profesor): ?>                                            
+                                            <option value= "<?= $profesor['id'] ?>">
+                                                <?= htmlspecialchars($profesor['id'] . "- " . $profesor['nombre']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="descripcion">Descripción</label>
-                                    <textarea class="form-control" for="descripcion" placeholder="Escriba la descripción de su materia" id="descripcion" style="height: 200px"></textarea>
+                                    <textarea class="form-control" name="descripcion" for="descripcion" placeholder="Escriba la descripción de su materia" id="descripcion" style="height: 200px" required></textarea>
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-accion">Crear materia</a>

@@ -27,7 +27,7 @@
 
                     // Borrar el mensaje una vez se muestra
                     unset($_SESSION['mensaje']);
-                }
+                    }
                 ?>
 
                 <div class="mb-2">
