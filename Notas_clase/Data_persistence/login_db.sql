@@ -1,12 +1,14 @@
+CREATE DATABASE login_db;
+
 USE login_db;
 
-CREATE TABLE estatus_usuario (
+CREATE TABLE estatus (
   id TINYINT UNSIGNED PRIMARY KEY,
   descripcion VARCHAR(50)
 );
 
 -- Insertamos los 5 estatus
-INSERT INTO estatus_usuario (id, descripcion) VALUES
+INSERT INTO estatus (id, descripcion) VALUES
 (1, 'Activo'),
 (2, 'Inactivo'),
 (3, 'Suspendido'),

@@ -2,7 +2,8 @@
     $host = 'localhost';
     $dbname = 'login_db';
     $usuario = 'root';
-    $clave = 'root';
+    $port = 3308;
+    $clave = '';
 
     try {
         /*
@@ -12,7 +13,7 @@
          * - dbname: nombre de la base de datos
          * - charset=utf8: asegura que se usen correctamente los acentos y caracteres especiales
          */
-        $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $clave);
+        $conn = new PDO("mysql:host=$host;dbname=$dbname;port=$port;charset=utf8", $usuario, $clave);
 
         /*
          * Configuramos el modo de errores para que PDO lance excepciones (EXCEPTION MODE).

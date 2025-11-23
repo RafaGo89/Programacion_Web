@@ -165,7 +165,7 @@
                         <p class="card-text">Administra el catálogo de materias. Crea nuevas asignaturas, asígnalas a profesores, eliminalas o edita el plan de estudios.</p>
                         <div class="d-flex justify-content-center mt-auto">
                             <a class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-materia">Crear</a>
-                            <a href="#" class="btn btn-accion">Ver materias</a>
+                            <a href="ver_materias.php" class="btn btn-accion">Ver materias</a>
                         </div>
                     </div>
                 </div>

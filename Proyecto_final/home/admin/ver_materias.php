@@ -4,23 +4,24 @@
     require_once("../../includes/conexion_bd.php");
 
     // Variables
-    $usuarios = [];
+    $materias = [];
     $busqueda = trim($_GET['busqueda'] ?? '');
 
     // Si hay un valor en busqueda preparamos la querie de busqueda
     if ($busqueda !== '') {
-        $sql = "SELECT U.id, U.nombres,
-                       U.a_paterno, U.a_materno,
-                       U.correo, R.nombre AS rol,
-                       E.estado, U.fecha_creacion,
-                       U.fecha_modificacion
-                FROM usuarios as U
-                INNER JOIN roles AS R
-                ON U.id_rol = R.id
-                INNER JOIN estatus AS E
-                ON U.id_estatus = E.id
-                WHERE U.nombres LIKE :patron OR
-                U.correo LIKE :patron";
+        $sql = "SELECT  M.id,
+                        M.nombre AS materia,
+                        M.descripcion,
+                        CONCAT(P.nombres, ' ', P.a_paterno, ' ', P.a_materno) AS profesor,
+                        E.estado,
+                        M.fecha_creacion,
+                        M.fecha_modificacion
+                    FROM materias AS M
+                    INNER JOIN usuarios as P
+                    ON M.id_profesor = P.id
+                    INNER JOIN estatus AS E
+                    ON M.id_estatus = E.id
+                    WHERE M.nombre LIKE :patron";
         
         // Preparamos y ejecutamos la consulta con un valor escapado de forma segura
         $stmt = $pdo->prepare($sql);
@@ -28,23 +29,25 @@
     }
     else {
         // Si no hay un valor en busqueda, seleccionamos a todos los usuarios
-        $sql = "SELECT U.id, U.nombres,
-                       U.a_paterno, U.a_materno,
-                       U.correo, R.nombre AS rol,
-                       E.estado, U.fecha_creacion,
-                       U.fecha_modificacion
-                FROM usuarios as U
-                INNER JOIN roles AS R
-                ON U.id_rol = R.id
-                INNER JOIN estatus AS E
-                ON U.id_estatus = E.id";
+        $sql = "SELECT  M.id,
+                        M.nombre AS materia,
+                        M.descripcion,
+                        CONCAT(P.nombres, ' ', P.a_paterno, ' ', P.a_materno) AS profesor,
+                        E.estado,
+                        M.fecha_creacion,
+                        M.fecha_modificacion
+                    FROM materias AS M
+                    INNER JOIN usuarios as P
+                    ON M.id_profesor = P.id
+                    INNER JOIN estatus AS E
+                    ON M.id_estatus = E.id";
 
         // Ejecumtamos la querie sin parametros
         $stmt = $pdo->query($sql);
     }
 
     // Obtenemos los resultados de la querie en un arreglo asociativo
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $materias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +58,7 @@
     <link rel="shortcut icon" href="../../assets/imgs/favicon.png" type="image/png" sizes="48x48">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="../../assets/css/estilos_panel.css">
-    <title>Usuarios</title>
+    <title>Materias</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header class="container-fluid d-flex justify-content-between py-2 bg-primario">  
@@ -72,19 +75,19 @@
     <main class="container-fluid flex-grow-1 text-center my-2">
         <div class="position-relative d-flex align-items-center mb-4 mt-3">
             <a href="index.php" type="button" class="btn btn-accion position-absolute start-0 top-50 translate-middle-y">Regresar</a>
-            <h1 class="text-center w-100 m-0">Lista de usuarios</h1>
+            <h1 class="text-center w-100 m-0">Lista de materias</h1>
         </div>
         <hr>
 
         <div class="d-flex justify-content-between">
             <!-- Formulario de búsqueda -->
-            <form class="mb-3 text-start" action="ver_usuarios.php" method="GET">
-                <label class="form-label fw-bold" for="busqueda">Buscar por nombre o correo: </label>
+            <form class="mb-3 text-start" action="ver_materias.php" method="GET">
+                <label class="form-label fw-bold" for="busqueda">Buscar por nombre de materia: </label>
                 <input type="text" name="busqueda" value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>">
                 <button type="submit" class="btn btn-accion">Buscar</button>
             </form>
             <!-- Formulario de reseteo de busqueda -->
-            <form class="mb-3 text-start" action="ver_usuarios.php" method="GET">
+            <form class="mb-3 text-start" action="ver_materias.php" method="GET">
                 <input type="hidden" name="busqueda" value="">
                 <button type="submit" class="btn btn-accion">Resetear búsqueda</button>
             </form>
@@ -95,11 +98,9 @@
             <thead>
                 <tr class="align-middle">
                     <th scope="col">Id</th>
-                    <th scope="col">Nombres</th>
-                    <th scope="col">A. paterno</th>
-                    <th scope="col">A. materno</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Rol</th>
+                    <th scope="col">Materia</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Profesor</th>
                     <th scope="col">Estatus</th>
                     <th scope="col">Creada</th>
                     <th scope="col">Modificada</th>
@@ -107,17 +108,15 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                <?php  foreach ($usuarios as $usuario):?>
+                <?php  foreach ($materias as $materia):?>
                     <tr>
-                        <th scope="row"><?= $usuario['id'] ?></th>
-                        <td><?= $usuario['nombres'] ?></td>
-                        <td><?= $usuario['a_paterno'] ?></td>
-                        <td><?= $usuario['a_materno'] ?></td>
-                        <td><?= $usuario['correo'] ?></td>
-                        <td><?= $usuario['rol'] ?></td>
-                        <td><?= $usuario['estado'] ?></td>
-                        <td><?= $usuario['fecha_creacion'] ?></td>
-                        <td><?= $usuario['fecha_modificacion'] ?></td>
+                        <th scope="row"><?= $materia['id'] ?></th>
+                        <td><?= $materia['materia'] ?></td>
+                        <td><?= $materia['descripcion'] ?></td>
+                        <td><?= $materia['profesor'] ?></td>
+                        <td><?= $materia['estado'] ?></td>
+                        <td><?= $materia['fecha_creacion'] ?></td>
+                        <td><?= $materia['fecha_modificacion'] ?></td>
                         <td>
                             <div class="d-flex">
                                 <button type="button" class="btn btn-accion me-2">Editar</button>

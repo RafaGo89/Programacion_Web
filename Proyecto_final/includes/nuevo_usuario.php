@@ -104,8 +104,8 @@
         // Si la inserción tuvo éxito regresamos al login
         if ($resultado) {
             $message = "<div class='alert alert-success mt-2' role='alert'>
-                    ¡Cuenta creada con éxito!
-                    </div>";
+                        ¡Cuenta creada con éxito!
+                        </div>";
 
                 $_SESSION['mensaje'] = $message;
                 header("Location: {$ruta}");
