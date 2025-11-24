@@ -1,5 +1,5 @@
 /**
- * Espera a que todo el documento HTML esté cargado antes de ejecutar el código
+ * Código JS para crear un mostrar u ocultar contraseña
  */
 document.addEventListener('DOMContentLoaded', function() {
     

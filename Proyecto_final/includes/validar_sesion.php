@@ -36,8 +36,9 @@
                     a_paterno,
                     a_materno,
                     id_rol,
-                    contrasena
-                from usuarios
+                    contrasena,
+                    id_estatus
+                FROM usuarios
                 WHERE correo = :correo";
         
         // Preparar la consulta contra inyecciones SQL
@@ -51,7 +52,9 @@
 
         // SEGUNDO CASO DE ERROR: Datos incorrectos
         // Si la consulta NO regresó algo O la contraseña NO coincide
-        if (!$datos_usuario || !password_verify($contrasena, $datos_usuario['contrasena'])) {
+        // O si la cuenta del usuario tiene un estatus de 'Eliminado'
+        if (!$datos_usuario || !password_verify($contrasena, $datos_usuario['contrasena']) ||
+            $datos_usuario['id_estatus'] == 4) {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Correo o contraseña incorrecta
                     </div>";
@@ -68,7 +71,7 @@
         $_SESSION['a_paterno'] = $datos_usuario['a_paterno'];
         $_SESSION['a_materno'] = $datos_usuario['a_materno'];                                        
 
-        $_SESSION['id_rol'] = $datos_usuario['id_rol'];
+        $_SESSION['id_rol'] = $datos_usuario['id_rol'];        
         
         // Reedirección según el rol
         switch ($_SESSION['id_rol']) {

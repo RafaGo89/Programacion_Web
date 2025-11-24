@@ -28,7 +28,7 @@ CREATE TABLE estatus (
 INSERT INTO estatus (estado) VALUES
 ('Inactivo'),
 ('Activo'),
-('Baja'),
+('Finalizado'),
 ('Eliminado');
 
 -- Tabla Usuarios

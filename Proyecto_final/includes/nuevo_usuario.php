@@ -68,7 +68,7 @@
 
         // Preparar consulta para inyecciones sql
         $stmt_correo = $pdo->prepare($sql_correo);
-        $stmt_correo->execute(["correo" => $correo]);
+        $stmt_correo->execute([":correo" => $correo]);
 
         // Ejecutar consulta
         $usuario_existente = $stmt_correo->fetch();
@@ -93,12 +93,12 @@
         $stmt_insertar = $pdo->prepare($sql_insertar);
         
         $resultado = $stmt_insertar->execute([
-            'nombres' => $nombres,
-            'a_paterno' => $a_paterno,
-            'a_materno' => $a_materno,
-            'correo' => $correo,
-            'contrasena' => $hash_contrasena,
-            'id_rol' => $rol
+            ':nombres' => $nombres,
+            ':a_paterno' => $a_paterno,
+            ':a_materno' => $a_materno,
+            ':correo' => $correo,
+            ':contrasena' => $hash_contrasena,
+            ':id_rol' => $rol
         ]);
 
         // Si la inserción tuvo éxito regresamos al login
@@ -108,6 +108,13 @@
                         </div>";
 
                 $_SESSION['mensaje'] = $message;
+
+                // Modificamos la ruta ya que si un usuario NO admin crea una cuenta
+                // debe regresar al login
+                if (!isset($_SESSION['id_rol']) && !$_SESSION['id_rol'] == 1) {
+                    $ruta = "../index.php";
+                }
+
                 header("Location: {$ruta}");
                 exit; 
         }

@@ -24,7 +24,7 @@
         
         // Preparamos y ejecutamos la consulta con un valor escapado de forma segura
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['patron' => "%$busqueda%"]);
+        $stmt->execute([':patron' => "%$busqueda%"]);
     }
     else {
         // Si no hay un valor en busqueda, seleccionamos a todos los usuarios
@@ -80,7 +80,7 @@
             <!-- Formulario de búsqueda -->
             <form class="mb-3 text-start" action="ver_usuarios.php" method="GET">
                 <label class="form-label fw-bold" for="busqueda">Buscar por nombre o correo: </label>
-                <input type="text" name="busqueda" value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>">
+                <input type="text" id="busqueda" name="busqueda" value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>">
                 <button type="submit" class="btn btn-accion">Buscar</button>
             </form>
             <!-- Formulario de reseteo de busqueda -->
@@ -89,6 +89,17 @@
                 <button type="submit" class="btn btn-accion">Resetear búsqueda</button>
             </form>
         </div>
+
+        <?php
+            // Mostrar mensaje de error sí lo hay
+            if (isset($_SESSION['mensaje'])) {
+
+            echo $_SESSION['mensaje'];
+            
+            // Borrar el mensaje una vez se muestra
+            unset($_SESSION['mensaje']);
+            }
+        ?>
 
         <table class="table table-striped table-hover align-middle">
             <caption>Lista de usuarios</caption>
@@ -121,13 +132,37 @@
                         <td>
                             <div class="d-flex">
                                 <button type="button" class="btn btn-accion me-2">Editar</button>
-                                <button type="button" class="btn btn-danger">Eliminar</button>
+                                <?php if ($usuario['estado'] != 'Eliminado'): ?>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar-usuario" data-id="<?= $usuario['id'] ?>">
+                                        Eliminar
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>            
         </table>
+
+        <!-- Modal Confirmación de eliminar usuario -->
+        <div class="modal fade" id="modal-eliminar-usuario" tabindex="-1" aria-labelledby="modal-eliminar-usuario-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primario">
+                        <h1 class="modal-title fs-3" id="modal-eliminar-usuario-label">Advertencia</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-start fs-5">
+                        <p>¿Estás seguro que quieres eliminar a este usuario?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-accion" data-bs-dismiss="modal">Cerrar</button> 
+                        <!-- Botón para eliminar con confirmación -->                       
+                        <a href="../../includes/eliminar.php" id="btn-confirmar-eliminar" type="button" class="btn btn-danger" >Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="container-fluid d-flex justify-content-between py-2 mt-3 bg-primario">
@@ -141,7 +176,6 @@
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
-
+    <script src="../../assets/js/leer_id_modal.js" defer></script>
 </body>
 </html>
