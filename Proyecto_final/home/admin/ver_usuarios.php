@@ -1,50 +1,72 @@
 <?php
     session_start();
 
-    require_once("../../includes/conexion_bd.php");
+    // Si no se ha inciado sesión y no se es admin
+    if (!isset($_SESSION['id_usuario']) && $_SESSION['id_usuario'] != 1) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Acceso no autorizado.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: ../../index.php");
+        exit;
+    }
 
     // Variables
     $usuarios = [];
     $busqueda = trim($_GET['busqueda'] ?? '');
 
-    // Si hay un valor en busqueda preparamos la querie de busqueda
-    if ($busqueda !== '') {
-        $sql = "SELECT U.id, U.nombres,
-                       U.a_paterno, U.a_materno,
-                       U.correo, R.nombre AS rol,
-                       E.estado, U.fecha_creacion,
-                       U.fecha_modificacion
-                FROM usuarios as U
-                INNER JOIN roles AS R
-                ON U.id_rol = R.id
-                INNER JOIN estatus AS E
-                ON U.id_estatus = E.id
-                WHERE U.nombres LIKE :patron OR
-                U.correo LIKE :patron";
-        
-        // Preparamos y ejecutamos la consulta con un valor escapado de forma segura
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':patron' => "%$busqueda%"]);
-    }
-    else {
-        // Si no hay un valor en busqueda, seleccionamos a todos los usuarios
-        $sql = "SELECT U.id, U.nombres,
-                       U.a_paterno, U.a_materno,
-                       U.correo, R.nombre AS rol,
-                       E.estado, U.fecha_creacion,
-                       U.fecha_modificacion
-                FROM usuarios as U
-                INNER JOIN roles AS R
-                ON U.id_rol = R.id
-                INNER JOIN estatus AS E
-                ON U.id_estatus = E.id";
+    try {
+        require_once("../../includes/conexion_bd.php");
+            // Si hay un valor en busqueda preparamos la querie de busqueda
+        if ($busqueda !== '') {
+            $sql = "SELECT U.id, U.nombres,
+                        U.a_paterno, U.a_materno,
+                        U.correo, R.nombre AS rol,
+                        E.estado, U.fecha_creacion,
+                        U.fecha_modificacion
+                    FROM usuarios as U
+                    INNER JOIN roles AS R
+                    ON U.id_rol = R.id
+                    INNER JOIN estatus AS E
+                    ON U.id_estatus = E.id
+                    WHERE U.nombres LIKE :patron OR
+                    U.correo LIKE :patron";
+            
+            // Preparamos y ejecutamos la consulta con un valor escapado de forma segura
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':patron' => "%$busqueda%"]);
+        }
+        else {
+            // Si no hay un valor en busqueda, seleccionamos a todos los usuarios
+            $sql = "SELECT U.id, U.nombres,
+                        U.a_paterno, U.a_materno,
+                        U.correo, R.nombre AS rol,
+                        E.estado, U.fecha_creacion,
+                        U.fecha_modificacion
+                    FROM usuarios as U
+                    INNER JOIN roles AS R
+                    ON U.id_rol = R.id
+                    INNER JOIN estatus AS E
+                    ON U.id_estatus = E.id";
 
-        // Ejecumtamos la querie sin parametros
-        $stmt = $pdo->query($sql);
+            // Ejecumtamos la querie sin parametros
+            $stmt = $pdo->query($sql);
+        }
+
+        // Obtenemos los resultados de la querie en un arreglo asociativo
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch (PDOException) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Hubo un error, intentalo de nuevo más tarde.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: index.php");
+        exit;
     }
 
-    // Obtenemos los resultados de la querie en un arreglo asociativo
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -131,9 +153,9 @@
                         <td><?= $usuario['fecha_modificacion'] ?></td>
                         <td>
                             <div class="d-flex">
-                                <button type="button" class="btn btn-accion me-2">Editar</button>
+                                <a href="editar_usuario.php?id=<?= $usuario['id'] ?>" class="btn btn-accion me-2">Editar</a>                                
                                 <?php if ($usuario['estado'] != 'Eliminado'): ?>
-                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar-usuario" data-id="<?= $usuario['id'] ?>">
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar" data-id="<?= $usuario['id'] ?>">
                                         Eliminar
                                     </button>
                                 <?php endif; ?>
@@ -145,11 +167,11 @@
         </table>
 
         <!-- Modal Confirmación de eliminar usuario -->
-        <div class="modal fade" id="modal-eliminar-usuario" tabindex="-1" aria-labelledby="modal-eliminar-usuario-label" aria-hidden="true">
+        <div class="modal fade" id="modal-eliminar" tabindex="-1" aria-labelledby="modal-eliminar-label" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-primario">
-                        <h1 class="modal-title fs-3" id="modal-eliminar-usuario-label">Advertencia</h1>
+                        <h1 class="modal-title fs-3" id="modal-eliminar-label">Advertencia</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-start fs-5">
@@ -158,7 +180,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-accion" data-bs-dismiss="modal">Cerrar</button> 
                         <!-- Botón para eliminar con confirmación -->                       
-                        <a href="../../includes/eliminar.php" id="btn-confirmar-eliminar" type="button" class="btn btn-danger" >Eliminar</a>
+                        <a href="../../includes/eliminar_usuario.php" id="btn-confirmar-eliminar" type="button" class="btn btn-danger" >Eliminar</a>
                     </div>
                 </div>
             </div>

@@ -1,18 +1,41 @@
 <?php
     session_start();
 
-    require_once("../../includes/conexion_bd.php");
+    // Si no se ha inciado sesión y no se es admin
+    if (!isset($_SESSION['id_usuario']) && $_SESSION['id_usuario'] != 1) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Acceso no autorizado.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: ../../index.php");
+        exit;
+    }
 
     // Variables
     $roles = [];
     $profesores = [];
 
-    // Queries para obtener datos de la base de datos
-    $roles = $pdo->query("SELECT id, nombre FROM roles")->fetchAll(PDO::FETCH_ASSOC);
-    $profesores = $pdo->query("SELECT id, 
-                              CONCAT(nombres, ' ', a_paterno, ' ', a_materno) as nombre
-                              FROM usuarios
-                              WHERE id_rol = 2")->fetchAll(PDO::FETCH_ASSOC);
+    try {
+        require_once("../../includes/conexion_bd.php");
+
+        // Queries para obtener datos de la base de datos
+        $roles = $pdo->query("SELECT id, nombre FROM roles")->fetchAll(PDO::FETCH_ASSOC);
+        $profesores = $pdo->query("SELECT id, 
+                                          CONCAT(nombres, ' ', a_paterno, ' ', a_materno) as nombre
+                                    FROM usuarios
+                                    WHERE id_rol = 2 AND id_estatus != 4")->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch (PDOException) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Hubo un error, intentalo de nuevo más tarde.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: ../../index.php");
+        exit;
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +85,7 @@
                         <h5 class="card-title text-center">Usuarios</h5>
                         <p class="card-text">Gestiona los perfiles de los usuarios. Crea nuevas cuentas, edita o elimina perfiles existentes o consulta la lista completa.</p>
                         <div class="d-flex justify-content-center mt-auto">
-                            <a class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-estudiante">Crear</a>
+                            <a class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-crear-usuario">Crear</a>
                             <a href="ver_usuarios.php" class="btn btn-accion">Ver usuarios</a>
                         </div>
                     </div>
@@ -70,11 +93,11 @@
             </div>
 
             <!-- Modal Crear Usuarios -->
-            <div class="modal fade" id="modal-crear-estudiante" tabindex="-1" aria-labelledby="modal-crear-estudiante-label" aria-hidden="true">
+            <div class="modal fade" id="modal-crear-usuario" tabindex="-1" aria-labelledby="modal-crear-usuario-label" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header bg-primario">
-                            <h1 class="modal-title fs-3" id="modal-crear-estudiante-label">Nuevo usuario</h1>
+                            <h1 class="modal-title fs-3" id="modal-crear-usuario-label">Nuevo usuario</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -112,8 +135,8 @@
 
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="rol">Tipo de cuenta</label>
-                                    <select class="form-select" name="rol" for="rol" id="rol" aria-label="Default select example" required>
-                                        <option value="" selected disable>Escoga un tipo de cuenta</option>
+                                    <select class="form-select" name="rol" id="rol" aria-label="Default select example" required>
+                                        <option selected disabled value="">Escoga un tipo de cuenta</option>
                                         <?php foreach($roles as $rol): ?>                                            
                                             <option value= "<?= $rol['id'] ?>">
                                                 <?= htmlspecialchars($rol['id'] . "- " . $rol['nombre']) ?>
@@ -187,7 +210,7 @@
                                 </div>
                                 <div class="mb-3 text-start">
                                     <label class="form-label fw-bold fs-5" for="profesor">Profesor</label>
-                                    <select class="form-select" name="id_profesor" id="profesor" for="profesor" aria-label="Default select example" required>
+                                    <select class="form-select" name="id_profesor" id="profesor"  aria-label="Default select example" required>
                                         <option selected disabled value="" >Escoga un profesor</option>
                                         <?php foreach($profesores as $profesor): ?>                                            
                                             <option value= "<?= $profesor['id'] ?>">

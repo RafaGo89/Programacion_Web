@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     // 1. Obtenemos el modal por su ID
-    var modalEliminar = document.getElementById('modal-eliminar-usuario');
+    var modalEliminar = document.getElementById('modal-eliminar');
     
     // 2. Verificamos que el modal exista para evitar errores en otras páginas
     if (modalEliminar) {
