@@ -6,7 +6,7 @@
 
     // Definimos la ruta para regresar dependiendo si el admin está creando
     // una cuenta, o si la está creando un usuario
-    if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
+    if (isset($_SESSION['id_rol']) || $_SESSION['id_rol'] == 1) {
         $ruta = "../home/admin/index.php";
     }
     else {
@@ -41,7 +41,7 @@
 
         // Si el admin no está creando la cuenta, solo se pueden crear cuentas
         // de tipo alumno
-        if (!isset($_SESSION['id_rol']) && $_SESSION['id_rol'] != 1) {
+        if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
             if ($_POST["rol"] != "3") {
                 $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Rol de cuenta inválido
@@ -111,7 +111,7 @@
 
                 // Modificamos la ruta ya que si un usuario NO admin crea una cuenta
                 // debe regresar al login
-                if (!isset($_SESSION['id_rol']) && !$_SESSION['id_rol'] == 1) {
+                if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
                     $ruta = "../index.php";
                 }
 

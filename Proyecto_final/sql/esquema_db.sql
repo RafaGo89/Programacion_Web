@@ -82,6 +82,7 @@ CREATE TABLE solicitudes (
 	id_materia INT UNSIGNED NOT NULL,
 	estado ENUM('Pendiente', 'Aprobado', 'Rechazado') DEFAULT 'Pendiente' NOT NULL,
 	fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	fecha_respuesta DATETIME,
 	
 	FOREIGN KEY (id_alumno) REFERENCES usuarios(id)
 	ON UPDATE CASCADE
@@ -98,8 +99,8 @@ CREATE TABLE tareas (
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	id_materia INT UNSIGNED NOT NULL,
 	titulo VARCHAR(100) NOT NULL,
-	descripcion TEXT,
-	fecha_limite DATETIME NOT NULL,
+	descripcion TEXT NOT NULL,
+	fecha_limite DATE NOT NULL,
 	ponderacion DECIMAL(5,2) NOT NULL COMMENT 'en porcentaje', -- 20.00%
 	fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	fecha_modificacion DATETIME,
@@ -116,9 +117,11 @@ CREATE TABLE calificaciones (
 	id_tarea INT UNSIGNED NOT NULL,
 	id_alumno INT UNSIGNED NOT NULL,
 	calificacion DECIMAL(5,2) NOT NULL,
-	fecha_entrega DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	fecha_entrega DATETIME,
+	esta_entregada BOOLEAN DEFAULT false,
 	esta_calificada BOOLEAN DEFAULT false,
-	
+	comentarios TEXT NOT NULL,
+
 	FOREIGN KEY (id_tarea) REFERENCES tareas(id)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE,

@@ -1,3 +1,99 @@
+<?php
+    session_start();
+
+    // Si no se ha inciado sesión y no se es estudiante
+    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 3) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Acceso no autorizado.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: ../../index.php");
+        exit;
+    }
+
+    // Variables
+    $materias = [];
+    $inscripciones = [];
+    $solicitudes = [];
+    $tareas =[];
+
+    try {
+        require_once("../../includes/conexion_bd.php");
+
+        $id_estudiante = $_SESSION['id_usuario'];
+
+        $materias = $pdo->query("SELECT S.id_materia,
+                                        M.nombre AS materia,
+                                        CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS profesor
+                                    FROM solicitudes AS S
+                                    INNER JOIN materias AS M
+                                    ON s.id_materia = M.id
+                                    INNER JOIN usuarios AS U
+                                    ON M.id_profesor = U.id
+                                    WHERE S.estado = 'Aprobado' AND
+                                          S.id_alumno = " . $id_estudiante)->fetchAll(PDO::FETCH_ASSOC);
+        
+        $inscripciones = $pdo->query("SELECT M.id,
+                                             M.nombre AS materia,
+                                             CONCAT(U.nombres, ' ', U.a_paterno, ' ', a_materno) AS profesor
+                                    FROM Materias AS M
+                                    INNER JOIN usuarios AS U
+                                    ON M.id_profesor = U.id
+                                    WHERE M.id_estatus = 2 AND
+                                          M.id NOT IN (SELECT DISTINCT id_materia
+                                                        FROM solicitudes
+                                                        WHERE id_alumno = {$id_estudiante})")->fetchAll(PDO::FETCH_ASSOC);
+        
+        $solicitudes = $pdo->query("SELECT S.id,
+                                           M.nombre AS materia,
+                                           CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS profesor,
+                                           S.estado
+                                           FROM solicitudes AS S
+                                           INNER JOIN materias AS M
+                                           ON S.id_materia = M.id
+                                           INNER JOIN usuarios AS U
+                                           ON M.id_profesor = U.id
+                                           WHERE S.id_alumno = {$id_estudiante}
+                                           ORDER BY S.fecha_solicitud DESC")->fetchAll(PDO::FETCH_ASSOC);
+        
+        $tareas = $pdo->query("SELECT
+                                    T.id as id_tarea,
+                                    T.titulo,
+                                    T.descripcion,
+                                    S.id_alumno as alumno,
+                                    M.nombre as materia,
+                                    CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS profesor,
+                                    T.fecha_limite,
+                                    C.id as id_calificacion,
+                                    T.ponderacion
+                                    FROM
+                                    tareas AS T
+                                    INNER JOIN materias AS M ON T.id_materia = M.id
+                                    INNER JOIN usuarios AS U ON M.id_profesor = U.id
+                                    INNER JOIN solicitudes AS S ON M.id = S.id_materia
+                                    INNER JOIN calificaciones AS C ON t.id = C.id_tarea
+                                    WHERE
+                                    S.estado = 'Aprobado'
+                                    AND M.id_estatus NOT IN (4, 3)
+                                    AND C.id_alumno = {$id_estudiante}
+                                    AND S.id_alumno = {$id_estudiante}
+                                    AND DATEDIFF(T.fecha_limite, NOW()) >= 0
+                                    AND C.esta_entregada = false
+                                    ORDER BY
+                                    T.fecha_limite")->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch (PDOException) {
+        $message = "<div class='alert alert-warning mt-2' role='alert'>
+                    Hubo un error, intentalo de nuevo más tarde.
+                    </div>";
+
+        $_SESSION['mensaje'] = $message;
+        header("Location: index.php");
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,8 +117,21 @@
     </header>
 
     <main class="container-fluid flex-grow-1 text-center my-2">
-        <h1 class="text-center mb-4 mt-3">Hola de nuevo, estudiante [Usuario]</h1>
+        <?php
+            echo "<h1 class='text-center mb-4 mt-3'>Hola de nuevo, estudiante $_SESSION[nombres]</h1>";        
+        ?>
         <hr>
+
+        <?php
+            // Mostrar mensaje de error sí lo hay
+            if (isset($_SESSION['mensaje'])) {
+
+            echo $_SESSION['mensaje'];
+
+            // Borrar el mensaje una vez se muestra
+            unset($_SESSION['mensaje']);
+            }
+        ?>
         
         <!-- Primera fila -->
         <div class="row mx-1 justify-content-start">
@@ -50,13 +159,15 @@
                         </div>
                         <div class="modal-body">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                <?php foreach($materias as $materia): ?>
+                                <li class="list-group-item d-flex mb-3 justify-content-between align-items-center bg-secundario">
                                     <div class="text-start">
-                                        <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                        <p class="mb-0"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
+                                        <p class="mb-0"><span class="fw-bold">Id materia:</span> <?= $materia['id_materia'] ?></p>
+                                        <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $materia['materia'] ?></p>
+                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $materia['profesor'] ?></p>
                                     </div>
                                 </li>
+                                <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>
@@ -73,14 +184,16 @@
                         </div>
                         <div class="modal-body">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                <?php foreach($inscripciones as $inscripcion): ?>
+                                <li class="list-group-item mb-3 d-flex justify-content-between align-items-center bg-secundario">
                                     <div class="text-start">
-                                        <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                        <p class="mb-0"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
+                                        <p class="mb-0"><span class="fw-bold">Id:</span> <?= $inscripcion['id'] ?></p>
+                                        <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $inscripcion['materia'] ?></p>
+                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $inscripcion['profesor'] ?></p>
                                     </div>
-                                    <button type="submit" class="btn btn-accion">Inscribirse</button>
+                                    <a href="../../includes/solicitar_materia.php?id_estudiante=<?= $id_estudiante ?>&id_materia=<?= $inscripcion['id'] ?>" class="btn btn-accion">Inscribirse</a>
                                 </li>
+                                <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>
@@ -144,30 +257,35 @@
                         </div>
                         <div class="modal-body">
                             <div class="accordion" id="accordion1">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">                                                
-                                            <div class="text-start">
-                                                <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                                <p class="mb-1"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                                <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
-                                                <p class="mb-1"><span class="fw-bold">Fecha de entrega:</span> [xx/xx/xx xx:xx:xx]</p>
-                                            </div>                                               
-                                        </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion1">
-                                        <div class="accordion-body">
-                                            <h3 class="text-start">[Tarea #]</h3>
-                                            <p class="text-start">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur nemo velit minus ad debitis sint, nihil nesciunt commodi, cupiditate rem quia cor</p>
+                                <?php foreach($tareas as $tarea): ?>
+                                    <div class="accordion-item mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $tarea['id_tarea'] ?>" aria-expanded="false" aria-controls="<?= $tarea['id_tarea'] ?>">                                                
+                                                <div class="text-start">                                                    
+                                                    <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $tarea['materia'] ?></p>
+                                                    <p class="mb-0"><span class="fw-bold">Profesor:</span> <?= $tarea['profesor'] ?></p>
+                                                    <p class="mb-0"><span class="fw-bold">Fecha de entrega:</span> <?= $tarea['fecha_limite'] ?></p>
+                                                    <p class="mb-0"><span class="fw-bold">Ponderación:</span> <?= $tarea['ponderacion'] ?>%</p>
+                                                </div>                                               
+                                            </button>
+                                        </h2>
+                                        <div id="<?= $tarea['id_tarea'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                            <div class="accordion-body">
+                                                <form action="../../includes/recibir_tarea.php" method="POST">
+                                                    <h3 class="text-start"><?= $tarea['titulo'] ?></h3>                                                    
+                                                    <p class="text-start"><?= $tarea['descripcion'] ?></p>
 
-                                            <div class="mb-3">
-                                                <label for="formFileMultiple" class="form-label fw-bold">Agregué sus archivos aquí</label>
-                                                <input class="form-control" type="file" id="formFileMultiple" multiple>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-bold" for="comentarios">Agregue sus comentarios aquí</label>
+                                                        <textarea class="form-control" name="comentarios" placeholder="Escriba sus comentarios" id="comentarios" style="height: 100px"></textarea>
+                                                    </div>
+                                                    <input type="hidden" name="id_calificacion" value="<?= $tarea['id_calificacion'] ?>">                                                                                                 
+                                                    <button class="btn btn-accion me-2">Enviar</button>
+                                                </form>                                                
                                             </div>
-                                            <button class="btn btn-accion me-2">Enviar</button>
                                         </div>
                                     </div>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>
@@ -253,14 +371,31 @@
                         </div>
                         <div class="modal-body">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
+                                <?php foreach($solicitudes as $solicitud): ?>
+                                <li class="list-group-item mb-3 d-flex justify-content-between align-items-center bg-secundario">
                                     <div class="text-start">
-                                        <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                        <p class="mb-0"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
-                                    </div>
-                                    <span class="badge text-bg-secondary fs-5">Pendiente</span>
+                                        <p class="mb-0"><span class="fw-bold">Id materia:</span> <?= $solicitud['id'] ?></p>
+                                        <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $solicitud['materia'] ?></p>
+                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $solicitud['profesor'] ?></p>
+                                    </div>                                    
+                                    <?php 
+                                        // Cambiar color de la badge y el mensaje dependiendo del estado de la solicitud
+                                        if ($solicitud['estado'] == 'Aprobado') {
+                                            $badge = 'text-bg-success';
+                                            $caso = 'Aprobada';
+                                        }
+                                        elseif ($solicitud['estado'] == 'Rechazado') {
+                                            $badge = 'text-bg-danger';
+                                            $caso = 'Rechazada';
+                                        }
+                                        else {
+                                            $badge = 'text-bg-secondary';
+                                            $caso = 'Pendiente';
+                                        }
+                                    ?>
+                                    <span class="badge <?= $badge ?> fs-5"><?= $caso ?></span>
                                 </li>
+                                <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>

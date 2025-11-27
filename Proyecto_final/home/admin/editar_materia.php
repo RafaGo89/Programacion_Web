@@ -2,7 +2,7 @@
     session_start();
 
     // Si no se ha inciado sesión y no se es admin
-    if (!isset($_SESSION['id_usuario']) && $_SESSION['id_usuario'] != 1) {
+    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Acceso no autorizado.
                     </div>";
@@ -32,8 +32,8 @@
             if (empty($_POST["nombre_materia"]) || empty($_POST["id_profesor"]) || empty($_POST["descripcion"])
                 || empty($_POST["estatus"])) {
                 $message = "<div class='alert alert-warning mt-2' role='alert'>
-                        No se pueden dejar campos vacíos
-                        </div>";
+                            No se pueden dejar campos vacíos
+                            </div>";
 
                 $_SESSION['mensaje'] = $message;
                 header("Location: editar_materia.php?id=" . $_POST['id']);

@@ -2,7 +2,7 @@
     session_start();
 
     // Si no se ha inciado sesión y no se es admin
-    if (!isset($_SESSION['id_usuario']) && $_SESSION['id_usuario'] != 1) {
+    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Acceso no autorizado.
                     </div>";
@@ -139,7 +139,7 @@
                                         <option selected disabled value="">Escoga un tipo de cuenta</option>
                                         <?php foreach($roles as $rol): ?>                                            
                                             <option value= "<?= $rol['id'] ?>">
-                                                <?= htmlspecialchars($rol['id'] . "- " . $rol['nombre']) ?>
+                                                <?= $rol['id'] . "- " . $rol['nombre'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -214,7 +214,7 @@
                                         <option selected disabled value="" >Escoga un profesor</option>
                                         <?php foreach($profesores as $profesor): ?>                                            
                                             <option value= "<?= $profesor['id'] ?>">
-                                                <?= htmlspecialchars($profesor['id'] . "- " . $profesor['nombre']) ?>
+                                                <?= $profesor['id'] . "- " . $profesor['nombre'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>

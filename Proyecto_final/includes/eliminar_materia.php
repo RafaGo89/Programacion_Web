@@ -2,7 +2,7 @@
     session_start();
 
     // Si no se ha inciado sesión y no se es admin
-    if (!isset($_SESSION['id_usuario']) && $_SESSION['id_usuario'] != 1) {
+    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_usuario'] != 1) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Acceso no autorizado.
                     </div>";

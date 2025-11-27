@@ -79,10 +79,10 @@
                 header("Location: ../home/admin/index.php");
                 break;
             case 2:
-                header("Location: ../home/profesor");
+                header("Location: ../home/profesor/index.php");
                 break;
             case 3:
-                header("Location: ../home/estudiante");
+                header("Location: ../home/estudiante/index.php");
                 break;
             default:
                 $message = "<div class='alert alert-danger mt-2' role='alert'>
