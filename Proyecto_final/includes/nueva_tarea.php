@@ -40,6 +40,9 @@
             }
 
             // Validación de fecha
+            // 1. Configurar zona horaria (CRUCIAL para que "hoy" sea hoy en tu país)
+            date_default_timezone_set('America/Mexico_City');
+
             $fecha_post = $_POST["fecha_limite"];
             
             // Creamos un objeto fecha a partir del formato esperado (Y-m-d)            
@@ -55,9 +58,14 @@
                 header("Location: ../home/profesor/index.php");
                 exit; 
             }
-                       
+            
+            // 2. Limpiamos la hora de la fecha elegida (00:00:00)
+            $fecha_obj->setTime(0, 0, 0);
+                
+            // 3. Creamos "Hoy" con la hora limpia (00:00:00)
             $hoy = new DateTime();
-            $hoy->setTime(0, 0, 0); // Resetear horas para comparar solo fechas
+            $hoy->setTime(0, 0, 0); 
+
             if ($fecha_obj < $hoy) {
                 $message = "<div class='alert alert-warning mt-2' role='alert'>
                             Esa fecha ya pasó.

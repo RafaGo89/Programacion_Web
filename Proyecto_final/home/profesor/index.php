@@ -118,7 +118,7 @@
                                 <?php foreach($materias as $materia): ?>
                                     <div class="accordion-item mb-3">                                    
                                         <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>" aria-expanded="false" aria-controls="<?= $materia['id'] ?>">                                                
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>_g" aria-expanded="false" aria-controls="<?= $materia['id'] ?>_g">                                                
                                                 <div class="text-start">
                                                     <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id'] ?></p>
                                                     <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $materia['nombre'] ?></p>
@@ -126,7 +126,7 @@
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $materia['id'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $materia['id'] ?>_g" class="accordion-collapse collapse" data-bs-parent="#accordion1">
                                             <div class="accordion-body">                                                
                                                 <?php 
                                                     // Obtenemos a los alumnos que son de una materia en particular
@@ -136,7 +136,7 @@
                                                                              ON U.id = S.id_alumno
                                                                              WHERE S.estado = 'Aprobado' AND
                                                                                    S.id_materia = {$materia['id']} AND
-                                                                                   U.id_estatus NOT IN (4, 3)")->fetchAll(PDO::FETCH_ASSOC);;
+                                                                                   U.id_estatus NOT IN (4, 3)")->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
                                                 <table class="table">
                                                     <thead>
@@ -277,14 +277,14 @@
                                 <?php foreach($materias as $materia): ?>
                                     <div class="accordion-item mb-3">                                    
                                         <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>" aria-expanded="false" aria-controls="<?= $materia['id'] ?>">                                                
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>_t" aria-expanded="false" aria-controls="<?= $materia['id'] ?>_t">                                                
                                                 <div class="text-start">
                                                     <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id'] ?></p>
                                                     <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $materia['nombre'] ?></p>                                                    
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $materia['id'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $materia['id'] ?>_t" class="accordion-collapse collapse" data-bs-parent="#accordion1">
                                             <div class="accordion-body">                                                
                                                 <?php 
                                                     // Obtenemos a los alumnos que son de una materia en particular
@@ -324,6 +324,89 @@
                                                         <?php endforeach; ?>
                                                     </tbody>
                                                 </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calificar -->
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body bg-secundario d-flex flex-column">
+                        <h5 class="card-title text-center">Calificar</h5>
+                        <p class="card-text text-center">Asigna una calificación a las tareas que tus estudiantes envíen.</p>
+                        <button class="btn btn-accion me-2 mt-auto" data-bs-toggle="modal" data-bs-target="#modal-entregas">Ver entregas</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Ver tarea -->
+            <div class="modal fade" id="modal-entregas" tabindex="-1" aria-labelledby="modal-entregas-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-entregas">Tareas por calificar</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="accordion" id="accordion1">
+                                <?php foreach($materias as $materia): ?>
+                                    <div class="accordion-item mb-3">                                    
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>_e" aria-expanded="false" aria-controls="<?= $materia['id'] ?>_e">                                                
+                                                <div class="text-start">
+                                                    <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id'] ?></p>
+                                                    <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $materia['nombre'] ?></p>                                                    
+                                                </div>                                               
+                                            </button>
+                                        </h2>
+                                        <div id="<?= $materia['id'] ?>_e" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                            <div class="accordion-body">                                                
+                                                <?php 
+                                                    // Obtenemos a las tareas que han sido entregas por materia
+                                                    $entregas = $pdo->query("SELECT
+                                                                                CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS estudiante,
+                                                                                C.id_tarea,
+                                                                                DATE_FORMAT(C.fecha_entrega, '%d/%m/%Y') as fecha_entrega,
+                                                                                C.comentarios,
+                                                                                T.titulo,
+                                                                                T.ponderacion,
+                                                                                C.id
+                                                                                FROM
+                                                                                calificaciones AS C
+                                                                                INNER JOIN tareas AS T ON C.id_tarea = T.id
+                                                                                INNER JOIN usuarios AS U ON C.id_alumno = U.id
+                                                                                WHERE C.esta_entregada = true
+                                                                                AND C.esta_calificada = false
+                                                                                AND T.id_materia = {$materia['id']}")->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <ul class="list-group">
+                                                    <?php foreach($entregas as $entrega): ?>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <div class="ms-2 me-auto">                        
+                                                                <div class="text-start">
+                                                                    <p class="mb-0 fw-bold"><?= $entrega['titulo'] ?></p>
+                                                                    <p class="mb-0"><span class="fw-bold">Estudiante:</span> <?= $entrega['estudiante'] ?></p>
+                                                                    <p class="mb-0"><span class="fw-bold">Ponderación:</span> <?= $entrega['ponderacion'] ?>%</p>
+                                                                    <p class="mb-0"><span class="fw-bold">Fecha de entrega:</span> <?= $entrega['fecha_entrega'] ?></p>
+                                                                    <p class="mb-0"><span class="fw-bold">Comentarios:</span> <?= $entrega['comentarios'] ?></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ms-3">
+                                                                <form action="../../includes/calificar.php" method="POST">
+                                                                    <input class="form-control mb-2" type="number" min="0" max="100" name="calificacion" id="calificacion" placeholder="80" required>
+                                                                    <button class="btn btn-accion me-2 mt-auto">Calificar</button>
+                                                                    <input type="hidden" name="id_calificacion" value="<?= $entrega['id'] ?>">
+                                                                </form>
+                                                            </div>
+                                                        </li>  
+                                                    <?php endforeach; ?>                                                                                              
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>

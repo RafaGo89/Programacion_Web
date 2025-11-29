@@ -1,7 +1,7 @@
 <?php
     session_start();
-    // Si no se ha inciado sesión y no se es alumno
-    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 3) {
+    // Si no se ha inciado sesión y no se es profesor
+    if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 2) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Acceso no autorizado.
                     </div>";
@@ -17,18 +17,29 @@
         // Asegurarnos que se envío algo
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // PRIMER CASO DE ERROR: Campos vacíos
-            if (empty($_POST["comentarios"]) || empty($_POST["id_calificacion"]) ||
-                !is_numeric($_POST["id_calificacion"])) {
+            if (empty($_POST["id_calificacion"]) || empty($_POST["calificacion"]) ||
+                !is_numeric($_POST["id_calificacion"]) || !is_numeric($_POST["calificacion"])) {
                 $message = "<div class='alert alert-warning mt-2' role='alert'>
-                            No se pueden dejar campos vacíos
-                            </div>";
+                        No se pueden dejar campos vacíos
+                        </div>";
 
                     $_SESSION['mensaje'] = $message;
-                    header("Location: ../home/estudiante/index.php");
+                    header("Location: ../home/profesor/index.php");
                     exit; 
             }
 
-            // Query para buscar que sí existe una materia con ese id
+            // Validación de formato de calificación
+            if ($_POST['calificacion'] > 100 || $_POST['calificacion'] < 0) {
+                $message = "<div class='alert alert-warning mt-2' role='alert'>
+                            Calificación fuera de rango (0-100).
+                            </div>";
+
+                $_SESSION['mensaje'] = $message;
+                header("Location: ../home/profesor/index.php");
+                exit; 
+            }                
+
+            // Query para buscar que sí existe una tarea con ese id
             $check = $pdo->prepare("SELECT id FROM calificaciones WHERE id = :id");
             $check->execute([':id' => $_POST["id_calificacion"]]);
 
@@ -38,36 +49,37 @@
                             </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: ../home/estudiante/index.php");
+                header("Location: ../home/profesor/index.php");
                 exit; 
             }
 
             // --- Si no están vacíos y se cumple el formato de los datos, continuamos ---
-            $comentarios = trim($_POST["comentarios"]);
             $id_calificacion = $_POST["id_calificacion"];
+            $calificacion = $_POST["calificacion"];
 
-            // Creamos consulta para actualizar la fila en calificación
-            $sql_actualizar = "UPDATE calificaciones SET fecha_entrega = NOW(),
-                                                       esta_entregada = true,
-                                                       comentarios = :comentarios
-                            WHERE id = :id_calificacion";
+            // Creamos consulta para actualizar la calificación
+            $sql_calificar = "UPDATE calificaciones
+                                SET
+                                calificacion = :calificacion,
+                                esta_calificada = true
+                            WHERE
+                                id = :id_calificacion";
 
             // Preparar consulta de inserción
-            $stmt_actualizar = $pdo->prepare($sql_actualizar);
+            $stmt_calificar = $pdo->prepare($sql_calificar);
 
-            $resultado = $stmt_actualizar->execute([
-                ':comentarios'           => $comentarios,
-                ':id_calificacion'       => $id_calificacion,
+            $resultado = $stmt_calificar->execute([
+                ':calificacion'          => $calificacion,
+                ':id_calificacion'       => $id_calificacion
             ]);
 
-            // Si la inserción tuvo éxito 
             if ($resultado) {
                 $message = "<div class='alert alert-success mt-2' role='alert'>
-                            Tarea entregada con éxito!
+                            Tarea calificada con éxito!
                             </div>";
 
                     $_SESSION['mensaje'] = $message;
-                    header("Location: ../home/estudiante/index.php");
+                    header("Location: ../home/profesor/index.php");
                     exit; 
             }
 
@@ -77,7 +89,7 @@
 
             // Si hubo algún error en la base de datos
             $_SESSION['mensaje'] = $message;
-            header("Location: ../home/estudiante/index.php");
+            header("Location: ../home/profesor/index.php");
             exit;
         }
         else {
@@ -96,6 +108,6 @@
                     </div>";
 
         $_SESSION['mensaje'] = $message;
-        header("Location: ../home/estudiante/index.php");
+        header("Location: ../home/profesor/index.php");
         exit;
     }

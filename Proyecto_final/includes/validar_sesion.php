@@ -7,8 +7,8 @@
         // PRIMER CASO DE ERROR: Campos vacíos
         if (empty($_POST['correo']) || empty($_POST['contrasena'])) {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
-                    No se pueden dejar campos vacíos
-                    </div>";
+                        No se pueden dejar campos vacíos
+                        </div>";
 
             $_SESSION['mensaje'] = $message;
             header("Location: ../index.php");
@@ -18,8 +18,8 @@
         // Validación de formato de correo
         if (!filter_var($_POST["correo"], FILTER_VALIDATE_EMAIL)) {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
-                    Formato de correo electrónico inválido
-                    </div>";
+                        Formato de correo electrónico inválido
+                        </div>";
 
             $_SESSION['mensaje'] = $message;
             header("Location: ../index.php");

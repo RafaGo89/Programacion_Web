@@ -28,7 +28,7 @@
                                         CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS profesor
                                     FROM solicitudes AS S
                                     INNER JOIN materias AS M
-                                    ON s.id_materia = M.id
+                                    ON S.id_materia = M.id
                                     INNER JOIN usuarios AS U
                                     ON M.id_profesor = U.id
                                     WHERE S.estado = 'Aprobado' AND
@@ -37,7 +37,7 @@
         $inscripciones = $pdo->query("SELECT M.id,
                                              M.nombre AS materia,
                                              CONCAT(U.nombres, ' ', U.a_paterno, ' ', a_materno) AS profesor
-                                    FROM Materias AS M
+                                    FROM materias AS M
                                     INNER JOIN usuarios AS U
                                     ON M.id_profesor = U.id
                                     WHERE M.id_estatus = 2 AND
@@ -72,7 +72,7 @@
                                     INNER JOIN materias AS M ON T.id_materia = M.id
                                     INNER JOIN usuarios AS U ON M.id_profesor = U.id
                                     INNER JOIN solicitudes AS S ON M.id = S.id_materia
-                                    INNER JOIN calificaciones AS C ON t.id = C.id_tarea
+                                    INNER JOIN calificaciones AS C ON T.id = C.id_tarea
                                     WHERE
                                     S.estado = 'Aprobado'
                                     AND M.id_estatus NOT IN (4, 3)
@@ -279,7 +279,7 @@
                                                         <label class="form-label fw-bold" for="comentarios">Agregue sus comentarios aquí</label>
                                                         <textarea class="form-control" name="comentarios" placeholder="Escriba sus comentarios" id="comentarios" style="height: 100px"></textarea>
                                                     </div>
-                                                    <input type="hidden" name="id_calificacion" value="<?= $tarea['id_calificacion'] ?>">                                                                                                 
+                                                    <input type="hidden" name="id_calificacion" value="<?= $tarea['id_calificacion'] ?>">
                                                     <button class="btn btn-accion me-2">Enviar</button>
                                                 </form>                                                
                                             </div>

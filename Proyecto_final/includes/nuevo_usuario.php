@@ -6,7 +6,7 @@
 
     // Definimos la ruta para regresar dependiendo si el admin está creando
     // una cuenta, o si la está creando un usuario
-    if (isset($_SESSION['id_rol']) || $_SESSION['id_rol'] == 1) {
+    if (isset($_SESSION['id_rol']) && $_SESSION['id_rol'] == 1) {
         $ruta = "../home/admin/index.php";
     }
     else {
