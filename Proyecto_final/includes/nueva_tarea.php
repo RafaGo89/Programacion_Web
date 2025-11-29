@@ -90,6 +90,26 @@
                 exit; 
             }
 
+            // Verificamos que no se haya superado los 100 puntos de ponderación
+            $sql = "SELECT SUM(ponderacion) FROM tareas WHERE id_materia = 3";
+
+            $stmt = $pdo->query($sql);
+
+            $suma_ponderacion = $stmt->fetchColumn();
+
+            $restante = 100 - $suma_ponderacion;
+
+            // El límite de los porcentajes de la ponderación es 100
+            if ($suma_ponderacion + $_POST["ponderacion"] > 100) {
+                $message = "<div class='alert alert-warning mt-2' role='alert'>
+                            No se puede superar el límite de ponderación de 100%. Restante {$restante}%. 
+                            </div>";
+
+                $_SESSION['mensaje'] = $message;
+                header("Location: ../home/profesor/index.php");
+                exit; 
+            }
+
             // --- Si no están vacíos y se cumple el formato de los datos, continuamos ---
             $titulo = trim($_POST["titulo"]);
             $materia = $_POST["materia"];

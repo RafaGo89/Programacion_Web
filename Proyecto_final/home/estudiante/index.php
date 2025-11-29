@@ -325,7 +325,7 @@
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion1">
                                         <div class="accordion-body">
-                                            <ol class="list-group">
+                                            <ul class="list-group">
                                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div class="ms-2 me-auto">                        
                                                         <div class="text-start">
@@ -337,7 +337,7 @@
                                                     </div>
                                                     <span class="badge text-bg-secondary fs-5">90.7</span>
                                                 </li>                                                                                                
-                                            </ol>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>

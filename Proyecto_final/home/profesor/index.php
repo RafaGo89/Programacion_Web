@@ -93,7 +93,7 @@
         ?>
 
         <!-- Primera fila -->
-        <div class="row mx-1 justify-content-center">
+        <div class="row mx-1 justify-content-start">
             <!-- Gestión de los grupos -->
             <div class="col-lg-3 col-md-6 col-12 mb-4">
                 <div class="card h-100">
@@ -114,7 +114,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="accordion1">
+                            <div class="accordion" id="accordion_g">
                                 <?php foreach($materias as $materia): ?>
                                     <div class="accordion-item mb-3">                                    
                                         <h2 class="accordion-header">
@@ -126,30 +126,38 @@
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $materia['id'] ?>_g" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $materia['id'] ?>_g" class="accordion-collapse collapse" data-bs-parent="#accordion_g">
                                             <div class="accordion-body">                                                
                                                 <?php 
-                                                    // Obtenemos a los alumnos que son de una materia en particular
-                                                    $alumnos = $pdo->query("SELECT CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS nombre
-                                                                             FROM usuarios AS U
-                                                                             INNER JOIN solicitudes AS S
-                                                                             ON U.id = S.id_alumno
-                                                                             WHERE S.estado = 'Aprobado' AND
-                                                                                   S.id_materia = {$materia['id']} AND
-                                                                                   U.id_estatus NOT IN (4, 3)")->fetchAll(PDO::FETCH_ASSOC);
+                                                    // Obtenemos a los alumnos que son de una materia en particular y su calificación ponderada
+                                                    $alumnos = $pdo->query("SELECT
+                                                                                CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS nombre,
+                                                                                CONCAT(
+                                                                                    ROUND(SUM((C.calificacion * T.ponderacion) / 100), 2),
+                                                                                    '/',
+                                                                                    SUM(T.ponderacion)
+                                                                                ) AS calificacion
+                                                                                FROM
+                                                                                tareas AS T
+                                                                                INNER JOIN calificaciones AS C ON T.id = C.id_tarea
+                                                                                INNER JOIN usuarios AS U ON C.id_alumno = U.id
+                                                                                WHERE
+                                                                                T.id_materia = {$materia['id']}
+                                                                                GROUP BY
+                                                                                C.id_alumno;")->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
                                                         <th scope="col">Alumno</th>
-                                                        <th scope="col">Calificacion</th>
+                                                        <th scope="col">Calificacion (puntos ponderados)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <?php foreach($alumnos as $alumno): ?>
                                                         <tr>
                                                             <td> <?= $alumno['nombre'] ?> </td>
-                                                            <td>99</td>
+                                                            <td><?= $alumno['calificacion'] ?></td>
                                                         </tr>
                                                         <?php endforeach; ?>
                                                     </tbody>
@@ -273,7 +281,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="accordion1">
+                            <div class="accordion" id="accordion_vt">
                                 <?php foreach($materias as $materia): ?>
                                     <div class="accordion-item mb-3">                                    
                                         <h2 class="accordion-header">
@@ -284,7 +292,7 @@
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $materia['id'] ?>_t" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $materia['id'] ?>_t" class="accordion-collapse collapse" data-bs-parent="#accordion_vt">
                                             <div class="accordion-body">                                                
                                                 <?php 
                                                     // Obtenemos a los alumnos que son de una materia en particular
@@ -354,7 +362,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="accordion1">
+                            <div class="accordion" id="accordion_t">
                                 <?php foreach($materias as $materia): ?>
                                     <div class="accordion-item mb-3">                                    
                                         <h2 class="accordion-header">
@@ -365,7 +373,7 @@
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $materia['id'] ?>_e" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $materia['id'] ?>_e" class="accordion-collapse collapse" data-bs-parent="#accordion_t">
                                             <div class="accordion-body">                                                
                                                 <?php 
                                                     // Obtenemos a las tareas que han sido entregas por materia
@@ -417,6 +425,111 @@
                 </div>
             </div>
              
+        </div>
+
+        <!-- Segunda fila -->
+        <div class="row mx-1 justify-content-start">
+            <!-- Avance -->
+            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body bg-secundario d-flex flex-column">
+                        <h5 class="card-title text-center">Avances</h5>
+                        <p class="card-text">Revisa el progreso de tus alumnos de acuerdo a las calificaciones que vayan obteniendo.</p>
+                        <button class="btn btn-accion me-2 mt-auto" data-bs-toggle="modal" data-bs-target="#modal-avance">Ver avance</button>
+                    </div>
+                </div>
+            </div> 
+            
+            <!-- Modal Ver Avance -->
+            <div class="modal fade" id="modal-avance" tabindex="-1" aria-labelledby="modal-avance-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primario">
+                            <h1 class="modal-title fs-3" id="modal-avance">Avance de tus alumnos</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="accordion" id="accordion_a">
+                                <?php foreach($materias as $materia): ?>
+                                    <div class="accordion-item mb-3">                                    
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id'] ?>_a" aria-expanded="false" aria-controls="<?= $materia['id'] ?>_a">                                                
+                                                <div class="text-start">
+                                                    <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id'] ?></p>
+                                                    <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $materia['nombre'] ?></p>                                                    
+                                                </div>                                               
+                                            </button>
+                                        </h2>
+                                        <div id="<?= $materia['id'] ?>_a" class="accordion-collapse collapse" data-bs-parent="#accordion_a">
+                                            <div class="accordion-body">
+                                                <?php 
+                                                    // Querie para obtener las tareas que el profesor ha asignado por materia
+                                                    $tareas = $pdo->query("SELECT
+                                                                    id,
+                                                                    titulo,
+                                                                    ponderacion
+                                                                    FROM
+                                                                    tareas
+                                                                    WHERE
+                                                                    id_materia = {$materia['id']}")->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <ul class="list-group">
+                                                    <?php foreach($tareas as $tarea): ?>
+                                                    <li class="list-group-item d-grid justify-content-between align-items-center mb-4">                                                                               
+                                                        <div class="text-start mb-2">
+                                                            <p class="mb-0"><span class="fw-bold">Id tarea:</span> <?= $tarea['id'] ?></p>
+                                                            <p class="mb-0"><span class="fw-bold">Titulo:</span> <?= $tarea['titulo'] ?></p>
+                                                            <p class="mb-0"><span class="fw-bold">Ponderacion:</span> <?= $tarea['ponderacion'] ?>%</p>
+                                                        </div>
+                                                        <?php 
+                                                            // Querie para obtener la información de las calificaciones por materia
+                                                            $calificaciones = $pdo->query("SELECT
+                                                                                                CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS alumno,
+                                                                                                C.fecha_entrega,
+                                                                                                C.calificacion,
+                                                                                                ROUND((C.calificacion * T.ponderacion) / 100, 2) AS puntos_obtenidos,
+                                                                                                T.ponderacion
+                                                                                                FROM
+                                                                                                calificaciones AS C
+                                                                                                INNER JOIN usuarios AS U ON C.id_alumno = U.id
+                                                                                                INNER JOIN tareas as T ON C.id_tarea = T.id
+                                                                                                WHERE
+                                                                                                C.id_tarea = {$tarea['id']}")->fetchAll(PDO::FETCH_ASSOC);
+                                                         ?>                                                          
+                                                         <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                <th scope="col">Alumno</th>
+                                                                <th scope="col">Fecha de entrega</th>
+                                                                <th scope="col">Calificación</th>
+                                                                <th scope="col">Puntos obtenidos</th>
+                                                                <th scope="col">Ponderación</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach($calificaciones as $calificacion): ?>
+                                                                    <tr>
+                                                                        <td> <?= $calificacion['alumno'] ?> </td>                                                                        
+                                                                        <td><?= $calificacion['fecha_entrega'] ?></td>
+                                                                        <td><?= $calificacion['calificacion'] ?></td>
+                                                                        <td><?= $calificacion['puntos_obtenidos'] ?></td>
+                                                                        <td><?= $calificacion['ponderacion'] ?>%</td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </li>
+                                                    <?php endforeach; ?>                                                                                                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
