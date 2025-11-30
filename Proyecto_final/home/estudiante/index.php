@@ -82,6 +82,24 @@
                                     AND C.esta_entregada = false
                                     ORDER BY
                                     T.fecha_limite")->fetchAll(PDO::FETCH_ASSOC);
+           
+        // CTE que obtiene el promedio general relativo, que cambia conforme se agreguen mas tareas con ponderación
+        $calificacion_general = $pdo->query("WITH
+                                                calificaciones_rel AS (
+                                                    SELECT
+                                                    (SUM(C.calificacion * T.ponderacion) / 100) / SUM(T.ponderacion) * 100 AS calificaciones
+                                                    FROM
+                                                    tareas AS T
+                                                    INNER JOIN calificaciones AS C ON T.id = C.id_tarea
+                                                    WHERE
+                                                    C.id_alumno = {$id_estudiante}
+                                                    GROUP BY
+                                                    T.id_materia
+                                                )
+                                                SELECT
+                                                ROUND(SUM(calificaciones) / COUNT(*), 2) AS calificacion_general
+                                                FROM
+                                                calificaciones_rel")->fetchColumn();              
     }
     catch (PDOException) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
@@ -144,7 +162,7 @@
                         <div class="d-flex justify-content-center mt-auto">
                             <a href="#" class="btn btn-accion me-2" data-bs-toggle="modal" data-bs-target="#modal-ver-materias">Materias</a>
                             <a href="#" class="btn btn-accion" data-bs-toggle="modal" data-bs-target="#modal-inscribirse">Inscribirse</a>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -160,13 +178,13 @@
                         <div class="modal-body">
                             <ul class="list-group">
                                 <?php foreach($materias as $materia): ?>
-                                <li class="list-group-item d-flex mb-3 justify-content-between align-items-center bg-secundario">
-                                    <div class="text-start">
-                                        <p class="mb-0"><span class="fw-bold">Id materia:</span> <?= $materia['id_materia'] ?></p>
-                                        <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $materia['materia'] ?></p>
-                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $materia['profesor'] ?></p>
-                                    </div>
-                                </li>
+                                    <li class="list-group-item d-flex mb-3 justify-content-between align-items-center bg-secundario">
+                                        <div class="text-start">
+                                            <p class="mb-0"><span class="fw-bold">Id materia:</span> <?= $materia['id_materia'] ?></p>
+                                            <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $materia['materia'] ?></p>
+                                            <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $materia['profesor'] ?></p>
+                                        </div>
+                                    </li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
@@ -200,36 +218,53 @@
                 </div>
             </div>
 
-            <!-- Promedio -->
+            <!-- Calificaciones -->
             <div class="col-lg-3 col-md-6 col-12 mb-4">
                 <div class="card h-100">
                     <div class="card-body bg-secundario d-flex flex-column">
-                        <h5 class="card-title text-center">Promedio general</h5>
-                        <p class="card-text text-center">Tu promedio general actual basado en todas las calificaciones registradas.</p>
-                        <p class="card-text text-center fs-1 fw-bold">95.0</p>
-                        <a href="#" class="btn btn-accion me-2 mt-auto" data-bs-toggle="modal" data-bs-target="#modal-ver-promedio">Promedio particular</a>
+                        <h5 class="card-title text-center">Calificación general</h5>
+                        <p class="card-text text-center">Tu calificación general actual basado en todas las calificaciones registradas respecto a su ponderación.</p>
+                        <p class="card-text text-center fs-1 fw-bold"><?= $calificacion_general ?></p>
+                        <a href="#" class="btn btn-accion me-2 mt-auto" data-bs-toggle="modal" data-bs-target="#modal-ver-calificacion">Calificaciones particulares</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal promedio -->
-            <div class="modal fade" id="modal-ver-promedio" tabindex="-1" aria-labelledby="modal-ver-promedio-label" aria-hidden="true">
+            <!-- Modal calificaciones -->
+            <div class="modal fade" id="modal-ver-calificacion" tabindex="-1" aria-labelledby="modal-ver-calificacion-label" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header bg-primario">
-                            <h1 class="modal-title fs-3" id="modal-ver-promedio-label">Promedios particulares</h1>
+                            <h1 class="modal-title fs-3" id="modal-ver-calificacion-label">Puntos ponderados obtenidos</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secundario">
-                                    <div class="text-start">
-                                        <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                        <p class="mb-0"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                        <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>
-                                    </div>
-                                    <span class="badge text-bg-secondary fs-5">90.7</span>
-                                </li>
+                                <?php foreach($materias as $materia): ?>
+                                    <li class="list-group-item d-flex mb-3 justify-content-between align-items-center bg-secundario">
+                                        <div class="text-start">
+                                            <p class="mb-0"><span class="fw-bold">Id materia:</span> <?= $materia['id_materia'] ?></p>
+                                            <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $materia['materia'] ?></p>
+                                            <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $materia['profesor'] ?></p>
+                                        </div>
+                                        <?php 
+                                            // Querie que obtiene los puntos ponderados obtenidos de los puntos disponibles
+                                            $calificacion = $pdo->query("SELECT
+                                                                                CONCAT(
+                                                                                    ROUND(SUM((C.calificacion * T.ponderacion) / 100), 2),
+                                                                                    '/',
+                                                                                    SUM(T.ponderacion)
+                                                                                ) AS calificacion
+                                                                                FROM
+                                                                                tareas AS T
+                                                                                INNER JOIN calificaciones AS C ON T.id = C.id_tarea
+                                                                                WHERE
+                                                                                T.id_materia = {$materia['id_materia']}
+                                                                                AND C.id_alumno = {$id_estudiante}")->fetchColumn();;
+                                        ?>
+                                        <span class="badge text-bg-secondary fs-5"><?= $calificacion ?></span>
+                                    </li>
+                                <?php endforeach; ?>                                
                             </ul>
                         </div>
                     </div>
@@ -256,11 +291,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="accordion1">
+                            <div class="accordion" id="accordion_e">
                                 <?php foreach($tareas as $tarea): ?>
                                     <div class="accordion-item mb-3">
                                         <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $tarea['id_tarea'] ?>" aria-expanded="false" aria-controls="<?= $tarea['id_tarea'] ?>">                                                
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $tarea['id_tarea'] ?>_e" aria-expanded="false" aria-controls="<?= $tarea['id_tarea'] ?>_e">                                                
                                                 <div class="text-start">                                                    
                                                     <p class="mb-0"><span class="fw-bold">Materia:</span> <?= $tarea['materia'] ?></p>
                                                     <p class="mb-0"><span class="fw-bold">Profesor:</span> <?= $tarea['profesor'] ?></p>
@@ -269,7 +304,7 @@
                                                 </div>                                               
                                             </button>
                                         </h2>
-                                        <div id="<?= $tarea['id_tarea'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                                        <div id="<?= $tarea['id_tarea'] ?>_e" class="accordion-collapse collapse" data-bs-parent="#accordion1">
                                             <div class="accordion-body">
                                                 <form action="../../includes/recibir_tarea.php" method="POST">
                                                     <h3 class="text-start"><?= $tarea['titulo'] ?></h3>                                                    
@@ -312,35 +347,56 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="accordion1">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">                                                
-                                            <div class="text-start">
-                                                <p class="mb-0"><span class="fw-bold">Id:</span> [id_materia]</p>
-                                                <p class="mb-1"><span class="fw-bold">Materia:</span> [Nombre_Materia]</p>
-                                                <p class="mb-1"><span class="fw-bold">Profesor:</span> [Nombre_Profesor]</p>                                                
-                                            </div>                                               
-                                        </button>
-                                    </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion1">
-                                        <div class="accordion-body">
-                                            <ul class="list-group">
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div class="ms-2 me-auto">                        
-                                                        <div class="text-start">
-                                                            <p class="mb-0 fw-bold">Tarea #1</p>
-                                                            <p class="mb-0"><span class="fw-bold">Ponderación:</span> 20%</p>
-                                                            <p class="mb-0"><span class="fw-bold">Fecha de entrega:</span> 12/12/25 11:59 pm</p>
-                                                            <p class="mb-0"><span class="fw-bold">Entregada el:</span> 12/12/25 10:05 pm</p>
-                                                        </div>
-                                                    </div>
-                                                    <span class="badge text-bg-secondary fs-5">90.7</span>
-                                                </li>                                                                                                
-                                            </ul>
+                            <div class="accordion" id="accordion_te">
+                                <?php foreach($materias as $materia): ?>
+                                    <div class="accordion-item mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id_materia'] ?>_te" aria-expanded="false" aria-controls="<?= $materia['id_materia'] ?>_te">                                                
+                                                <div class="text-start">
+                                                    <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id_materia'] ?></p>
+                                                    <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $tarea['materia'] ?></p>
+                                                    <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $tarea['profesor'] ?></p>                                                
+                                                </div>                                               
+                                            </button>
+                                        </h2>
+                                        <div id="<?= $materia['id_materia'] ?>_te" class="accordion-collapse collapse" data-bs-parent="#accordion_te">
+                                            <div class="accordion-body">
+                                                <?php 
+                                                    // Querie para obtener la información de las tareas entregadas o no
+                                                    $entregas = $pdo->query("SELECT
+                                                                                T.titulo,
+                                                                                T.ponderacion,
+                                                                                T.fecha_limite,
+                                                                                COALESCE(C.fecha_entrega, 'No entregada') AS fecha_entrega,
+                                                                                C.calificacion
+                                                                                FROM
+                                                                                calificaciones AS C
+                                                                                INNER JOIN tareas AS T ON C.id_tarea = T.id
+                                                                                WHERE
+                                                                                T.id_materia = {$materia['id_materia']}
+                                                                                AND C.id_alumno = {$id_estudiante}
+                                                                                ORDER BY
+                                                                                T.fecha_limite")->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <ul class="list-group">
+                                                    <?php foreach($entregas as $entrega): ?>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <div class="ms-2 me-auto">                                                                                                                                                
+                                                                <div class="text-start">
+                                                                    <p class="mb-0 fw-bold"><?= $entrega['titulo'] ?></p>
+                                                                    <p class="mb-0"><span class="fw-bold">Ponderación:</span> <?= $entrega['ponderacion'] ?>%</p>
+                                                                    <p class="mb-0"><span class="fw-bold">Fecha de entrega:</span> <?= $entrega['fecha_limite'] ?></p>
+                                                                    <p class="mb-0"><span class="fw-bold">Entregada el:</span> <?= $entrega['fecha_entrega'] ?></p>
+                                                                </div>                                                            
+                                                            </div>
+                                                            <span class="badge text-bg-secondary fs-5"><?= $entrega['calificacion'] ?></span>
+                                                        </li>    
+                                                    <?php endforeach; ?>                                                                                            
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>

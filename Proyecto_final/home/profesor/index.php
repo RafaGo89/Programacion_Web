@@ -133,18 +133,21 @@
                                                     $alumnos = $pdo->query("SELECT
                                                                                 CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS nombre,
                                                                                 CONCAT(
-                                                                                    ROUND(SUM((C.calificacion * T.ponderacion) / 100), 2),
+                                                                                    COALESCE(ROUND(SUM((C.calificacion * T.ponderacion) / 100), 2), 0),
                                                                                     '/',
-                                                                                    SUM(T.ponderacion)
+                                                                                    COALESCE(SUM(T.ponderacion), 0)
                                                                                 ) AS calificacion
                                                                                 FROM
-                                                                                tareas AS T
-                                                                                INNER JOIN calificaciones AS C ON T.id = C.id_tarea
-                                                                                INNER JOIN usuarios AS U ON C.id_alumno = U.id
+                                                                                solicitudes AS S
+                                                                                LEFT JOIN usuarios AS U ON S.id_alumno = U.id
+                                                                                LEFT JOIN tareas AS T ON S.id_materia = T.id_materia
+                                                                                LEFT JOIN calificaciones AS C ON T.id = C.id_tarea
+                                                                                AND C.id_alumno = U.id
                                                                                 WHERE
-                                                                                T.id_materia = {$materia['id']}
+                                                                                S.id_materia = {$materia['id']}
+                                                                                AND S.estado = 'Aprobado'
                                                                                 GROUP BY
-                                                                                C.id_alumno;")->fetchAll(PDO::FETCH_ASSOC);
+                                                                                U.id")->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
                                                 <table class="table">
                                                     <thead>
@@ -485,7 +488,7 @@
                                                             // Querie para obtener la información de las calificaciones por materia
                                                             $calificaciones = $pdo->query("SELECT
                                                                                                 CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS alumno,
-                                                                                                C.fecha_entrega,
+                                                                                                COALESCE(C.fecha_entrega, 'No entregada') AS fecha_entrega,
                                                                                                 C.calificacion,
                                                                                                 ROUND((C.calificacion * T.ponderacion) / 100, 2) AS puntos_obtenidos,
                                                                                                 T.ponderacion
