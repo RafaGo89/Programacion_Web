@@ -37,6 +37,7 @@
                     a_materno,
                     id_rol,
                     contrasena,
+                    correo,
                     id_estatus
                 FROM usuarios
                 WHERE correo = :correo";
@@ -70,7 +71,7 @@
         $_SESSION['nombres'] = $datos_usuario['nombres'];
         $_SESSION['a_paterno'] = $datos_usuario['a_paterno'];
         $_SESSION['a_materno'] = $datos_usuario['a_materno'];                                        
-
+        $_SESSION['correo'] = $datos_usuario['correo']; 
         $_SESSION['id_rol'] = $datos_usuario['id_rol'];        
         
         // Reedirección según el rol

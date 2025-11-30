@@ -91,7 +91,7 @@
             }
 
             // Verificamos que no se haya superado los 100 puntos de ponderación
-            $sql = "SELECT SUM(ponderacion) FROM tareas WHERE id_materia = 3";
+            $sql = "SELECT SUM(ponderacion) FROM tareas WHERE id_materia = {$_POST["materia"]}";
 
             $stmt = $pdo->query($sql);
 

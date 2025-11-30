@@ -71,3 +71,7 @@ header a:hover {
     background-color: #274C77;
     color: #FFFFFF;
 }
+
+.perfil:hover {
+    cursor: pointer;
+}

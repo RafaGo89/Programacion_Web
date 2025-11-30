@@ -11,6 +11,11 @@
         exit;
     }
 
+    // DEFINICIÓN DE VARIABLES PARA LA VISTA
+    $titulo = "Editar usuario"; // Esto cambiará el <title> del header
+    $ruta_estilos = "../../";       // Cuántas carpetas hay que subir para llegar a assets
+    $ruta_cerrar_sesion = "../../";
+
 
     // Variables
     $roles = [];
@@ -25,6 +30,18 @@
 
         // Si se ha enviado el formulario con método POST, procesamos la edición.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 1. CAPTURAR EL ID DE LA materia primero (Para poder redirigir si hay error)
+            $id_usuario_post = isset($_POST["id_usuario"]) ? $_POST["id_usuario"] : null;
+
+            if (!$id_usuario_post) {
+                $message = "<div class='alert alert-warning mt-2' role='alert'>
+                            Error crítico: No se recibió el ID del usuario.
+                            </div>";
+                $_SESSION['mensaje'] = $message;
+                header("Location: index.php");
+                exit;
+            }
+
             // PRIMER CASO DE ERROR: Campos vacíos
             if (empty($_POST["nombres"]) || empty($_POST["a_paterno"]) || empty($_POST["a_materno"]) ||
                 empty($_POST["correo"]) || empty($_POST["rol"]) || empty($_POST["estatus"])) {
@@ -33,7 +50,7 @@
                         </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: editar_usuario.php?id=" . $_POST['id']);
+                header("Location: editar_usuario.php?id=" . $id);
                 exit; 
             }
 
@@ -44,12 +61,11 @@
                         </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: editar_usuario.php?id=" . $_POST['id']);
+                header("Location: editar_usuario.php?id=" . $id_usuario_post);
                 exit; 
             }
 
             // Obtenemos los datos del formulario
-            $id = $_POST['id'];
             $nombres = trim($_POST['nombres']);
             $a_paterno = trim($_POST['a_paterno']);
             $a_materno = trim($_POST['a_materno']);
@@ -62,7 +78,7 @@
             * con un ID distinto al actual.
             */
             $check = $pdo->prepare("SELECT id FROM usuarios WHERE correo = :correo AND id != :id");
-            $check->execute([':correo' => $correo, ':id' => $id]);
+            $check->execute([':correo' => $correo, ':id' => $id_usuario_post]);
 
             if ($check->rowCount() > 0) {
                 $message = "<div class='alert alert-warning mt-2' role='alert'>
@@ -70,7 +86,7 @@
                             </div>";
 
                 $_SESSION['mensaje'] = $message;
-                header("Location: editar_usuario.php?id=" . $_POST['id']);
+                header("Location: editar_usuario.php?id=" . $id_usuario_post);
                 exit; 
             }
             else {
@@ -93,11 +109,11 @@
                     ':correo'     => $correo,
                     ':rol'     => $rol,
                     ':estatus' => $estatus,
-                    'id' => $id
+                    'id' => $id_usuario_post
                 ]);
 
                 // Redirigimos para evitar reenvío del formulario al refrescar
-                header("Location: editar_usuario.php?id=$id&actualizado=1");
+                header("Location: editar_usuario.php?id=$id_usuario_post&actualizado=1");
                 exit;
             } 
 
@@ -109,7 +125,7 @@
                                           id_estatus
                                         FROM usuarios
                                         WHERE id = :id");
-            $stmt->execute([':id' => $id]);
+            $stmt->execute([':id' => $id_usuario_post]);
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         // Si obtuvimos una petición GET
@@ -168,30 +184,9 @@
         exit;
     }
 
-
+    // Incluimos el header
+    require_once("../../includes/header.php");
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="../../assets/imgs/favicon.png" type="image/png" sizes="48x48">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../assets/css/estilos_panel.css">
-    <title>Editar</title>
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <header class="container-fluid d-flex justify-content-between py-2 bg-primario">  
-        <div class="d-flex">
-            <img src="../../assets/imgs/logo.png" alt="logo_escuela" width="60px" height="60px">
-        </div>
-
-        <div class="d-flex align-items-center">
-            <a href="../../cerrar_sesion.php" class="pe-1 fw-bold">Cerrar sesión</a>
-            <img src="../../assets/imgs/usuario_foto.png" alt="logo_escuela" width="50px" height="50px">
-        </div>  
-    </header>
 
     <main class="container flex-grow-1 my-2 d-flex justify-content-center align-items-center">
         <div class="bg-secundario rounded shadow-lg mt-3">
@@ -211,7 +206,7 @@
                 ?>
                 
                 <!-- ID oculto para saber qué usuario estamos editando -->
-                <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+                <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
                        
 
                 <div class="mb-2">
@@ -265,16 +260,7 @@
         </div>
     </main>
 
-    <footer class="container-fluid d-flex justify-content-between py-2 mt-3 bg-primario">
-        <div>
-            <span>&copy;Centro Educativo "Integra" 2025</span>
-        </div>
-        <div>
-            <img class="mx-2" src="../../assets/imgs/instagram_logo.png" alt="instagram_logo" width="30px" height="30px">
-            <img src="../../assets/imgs/facebook_logo.png" alt="facebook_logo" width="30px" height="30px">
-        </div>
-    </footer>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-</html>
+<?php 
+    // Incluimos el footer
+    require_once("../../includes/footer.php");
+?>

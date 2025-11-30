@@ -12,6 +12,11 @@
         exit;
     }
 
+    // DEFINICIÓN DE VARIABLES PARA LA VISTA
+    $titulo = "Lista de materias"; // Esto cambiará el <title> del header
+    $ruta_estilos = "../../";       // Cuántas carpetas hay que subir para llegar a assets
+    $ruta_cerrar_sesion = "../../";
+
     // Variables
     $materias = [];
     $busqueda = trim($_GET['busqueda'] ?? '');
@@ -71,29 +76,9 @@
         exit;
     }
 
+    // Incluimos el header
+    require_once("../../includes/header.php");
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="../../assets/imgs/favicon.png" type="image/png" sizes="48x48">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../assets/css/estilos_panel.css">
-    <title>Materias</title>
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <header class="container-fluid d-flex justify-content-between py-2 bg-primario">  
-        <div class="d-flex">
-            <img src="../../assets/imgs/logo.png" alt="logo_escuela" width="60px" height="60px">
-        </div>
-
-        <div class="d-flex align-items-center">
-            <a href="../../cerrar_sesion.php" class="pe-1 fw-bold">Cerrar sesión</a>
-            <img src="../../assets/imgs/usuario_foto.png" alt="logo_escuela" width="50px" height="50px">
-        </div>  
-    </header>
 
     <main class="container-fluid flex-grow-1 text-center my-2">
         <div class="position-relative d-flex align-items-center mb-4 mt-3">
@@ -187,17 +172,7 @@
         </div>
     </main>
 
-    <footer class="container-fluid d-flex justify-content-between py-2 mt-3 bg-primario">
-        <div>
-            <span>&copy;Centro Educativo "Integra" 2025</span>
-        </div>
-        <div>
-            <img class="mx-2" src="../../assets/imgs/instagram_logo.png" alt="instagram_logo" width="30px" height="30px">
-            <img src="../../assets/imgs/facebook_logo.png" alt="facebook_logo" width="30px" height="30px">
-        </div>
-    </footer>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="../../assets/js/leer_id_modal.js" defer></script>
-</body>
-</html>
+<?php 
+    // Incluimos el footer
+    require_once("../../includes/footer.php");
+?>
