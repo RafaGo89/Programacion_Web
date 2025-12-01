@@ -101,6 +101,7 @@
                                                     FROM
                                                     tareas AS T
                                                     INNER JOIN calificaciones AS C ON T.id = C.id_tarea
+                                                    INNER JOIN materias AS M ON T.id_materia = M.id AND M.id_estatus NOT IN (3, 4) 
                                                     WHERE
                                                     C.id_alumno = {$id_estudiante}
                                                     GROUP BY
