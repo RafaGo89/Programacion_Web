@@ -33,7 +33,8 @@
                                  WHERE id_estatus NOT IN (4, 3) AND
                                        id_profesor = " . $id_profesor)->fetchAll(PDO::FETCH_ASSOC);
         
-        $solicitudes = $pdo->query("SELECT S.id, 
+        $solicitudes = $pdo->query("SELECT S.id,
+                                           M.id AS id_materia, 
                                            CONCAT(U.nombres, ' ', U.a_paterno, ' ', U.a_materno) AS nombre,
                                            M.nombre AS materia,
                                            DATE_FORMAT(S.fecha_solicitud, '%d/%m/%Y') as fecha_solicitud  
@@ -190,7 +191,7 @@
                                         <p class="mb-0"><span class="fw-bold">Fecha de solicitud:</span> <?= $solicitud['fecha_solicitud'] ?></p>
                                     </div>   
                                     <div class="d-grid gap-2 p-2">
-                                        <a href="../../includes/procesar_solicitud.php?id=<?= $solicitud['id'] ?>&accion=aceptar" class="btn btn-success w-100">Aceptar</a>
+                                        <a href="../../includes/procesar_solicitud.php?id=<?= $solicitud['id'] ?>&accion=aceptar&id_materia=<?= $solicitud['id_materia'] ?>" class="btn btn-success w-100">Aceptar</a>
                                         <a href="../../includes/procesar_solicitud.php?id=<?= $solicitud['id'] ?>&accion=rechazar" class="btn btn-danger w-100">Rechazar</a>
                                     </div>                           
                                 </li>
@@ -295,7 +296,7 @@
                                                                                 FROM
                                                                                 tareas
                                                                                 WHERE
-                                                                                id_materia = {$materia['id']}")->fetchAll(PDO::FETCH_ASSOC);;
+                                                                                id_materia = {$materia['id']}")->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
                                                 <table class="table align-middle">
                                                     <thead>

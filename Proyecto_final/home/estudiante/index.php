@@ -340,8 +340,8 @@
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $materia['id_materia'] ?>_te" aria-expanded="false" aria-controls="<?= $materia['id_materia'] ?>_te">                                                
                                                 <div class="text-start">
                                                     <p class="mb-0"><span class="fw-bold">Id:</span> <?= $materia['id_materia'] ?></p>
-                                                    <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $tarea['materia'] ?></p>
-                                                    <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $tarea['profesor'] ?></p>                                                
+                                                    <p class="mb-1"><span class="fw-bold">Materia:</span> <?= $materia['materia'] ?></p>
+                                                    <p class="mb-1"><span class="fw-bold">Profesor:</span> <?= $materia['profesor'] ?></p>                                                
                                                 </div>                                               
                                             </button>
                                         </h2>

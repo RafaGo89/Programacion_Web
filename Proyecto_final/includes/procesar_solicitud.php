@@ -16,7 +16,8 @@
         require_once("conexion_bd.php");
 
         // Si obtuvimos una petición GET
-        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id']) 
+            || !isset($_GET['id_materia']) || !is_numeric($_GET['id_materia'])) {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
                     Ocurrió un error, inténtalo de nuevo.
                     </div>";
@@ -28,11 +29,12 @@
 
         // Convertimos el valor recibido a entero por seguridad
         $id = intval($_GET['id']);
+        $id_materia = intval($_GET['id_materia']);
 
         // Nos cercioramos que la solicitud exista
         $stmt = $pdo->prepare("SELECT id      
-                            FROM solicitudes
-                            WHERE id = :id");
+                                FROM solicitudes
+                                WHERE id = :id");
         $stmt->execute([':id' => $id]);
 
         // Si no hay una solicitud con dicha Id
@@ -58,6 +60,54 @@
             $stmt->execute([
                 ':id' => $id
             ]);
+
+            // Procedemos ver si la materia YA tiene tareas
+            $sql = "SELECT id
+                    FROM tareas
+                    WHERE id_materia = :id_materia";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':id_materia' => $id_materia
+            ]);
+
+            $tareas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Si no hay tareas simplemente salimos
+            if (!$tareas) {
+                $message = "<div class='alert alert-success mt-2' role='alert'>
+                        Se aprobó la solicitud con éxito--.
+                        </div>";
+
+                $_SESSION['mensaje'] = $message;
+                header("Location: ../home/profesor/index.php");
+                exit;
+            }
+
+            // Si hay tareas, obtenemos el id del alumno que solicitó la materia
+            $sql = "SELECT id_alumno
+                    FROM solicitudes
+                    WHERE id = :id";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+            $id_alumno = $stmt->fetchColumn();
+
+            // Asigamos las tareas al alumno
+            foreach ($tareas as $tarea) {
+                $sql = "INSERT INTO 
+                        calificaciones (id_tarea, id_alumno, calificacion)
+                        VALUES (:id_tarea, :id_alumno, 0)";
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_tarea'  => $tarea['id'],
+                    ':id_alumno' => $id_alumno
+                ]);
+            }
 
             $message = "<div class='alert alert-success mt-2' role='alert'>
                         Se aprobó la solicitud con éxito.
@@ -99,9 +149,9 @@
         header("Location: ../home/profesor/index.php");
         exit;
     }
-    catch (PDOException) {
+    catch (PDOException $e) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
-                    Ocurrió un error, inténtalo de nuevo.
+                    {$e}
                     </div>";
 
         $_SESSION['mensaje'] = $message;
