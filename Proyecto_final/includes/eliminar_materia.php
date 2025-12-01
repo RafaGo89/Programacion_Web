@@ -29,6 +29,8 @@
 
     try {
         require_once("conexion_bd.php");
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Verificamos que la materia exista
         $verificar = $pdo->prepare("SELECT id FROM materias WHERE id = :id");
@@ -48,9 +50,9 @@
         // Si la materia existe, cambiamos su estatus a 'elimianda'
         // preparando la consulta
         $eliminar = $pdo->prepare("UPDATE materias SET id_estatus = 4,
-                                                       fecha_modificacion = NOW() 
+                                                       fecha_modificacion = :fecha 
                                    WHERE id = :id");
-        $eliminar->execute([':id' => $id]);
+        $eliminar->execute([':id' => $id, 'fecha' => $fecha_actual]);
                 
         $message = "<div class='alert alert-success mt-2' role='alert'>
                     Materia eliminada con éxito

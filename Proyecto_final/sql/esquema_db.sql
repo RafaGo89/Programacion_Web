@@ -117,7 +117,7 @@ CREATE TABLE calificaciones (
 	id_tarea INT UNSIGNED NOT NULL,
 	id_alumno INT UNSIGNED NOT NULL,
 	calificacion DECIMAL(5,2) NOT NULL,
-	fecha_entrega DATETIME,
+	fecha_entrega DATE,
 	esta_entregada BOOLEAN DEFAULT false,
 	esta_calificada BOOLEAN DEFAULT false,
 	comentarios TEXT NOT NULL,

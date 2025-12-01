@@ -42,6 +42,7 @@
             // Validación de fecha
             // 1. Configurar zona horaria (CRUCIAL para que "hoy" sea hoy en mi país)
             date_default_timezone_set('America/Mexico_City');
+            $fecha_actual = date('Y-m-d H:i:s');
 
             $fecha_post = $_POST["fecha_limite"];
             
@@ -121,7 +122,7 @@
             $sql_insertar = "INSERT INTO tareas (id_materia, titulo, descripcion,
                                                 fecha_limite, ponderacion, fecha_creacion)
                             VALUES (:id_materia, :titulo, :descripcion, :fecha_limite,
-                                    :ponderacion, NOW())";
+                                    :ponderacion, :fecha_creacion)";
 
             // Preparar consulta de inserción
             $stmt_insertar = $pdo->prepare($sql_insertar);
@@ -131,7 +132,8 @@
                 ':titulo'       => $titulo,
                 ':descripcion'  => $descripcion,
                 ':fecha_limite' => $fecha_limite,
-                ':ponderacion'  => $ponderacion
+                ':ponderacion'  => $ponderacion,
+                ':fecha_creacion' => $fecha_actual
             ]);
 
             // 1. Obtenemos el ID directo de la inserción anterior

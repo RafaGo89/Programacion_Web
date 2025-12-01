@@ -14,6 +14,8 @@
 
     try {
         require_once("conexion_bd.php");
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Si obtuvimos una petición GET
         if (!isset($_GET['id_estudiante']) || !is_numeric($_GET['id_estudiante']) ||
@@ -67,12 +69,13 @@
 
         // Preparamos la inserción de la solicitud
         $sql = "INSERT INTO solicitudes (id_alumno, id_materia, fecha_solicitud)
-                VALUES (:id_estudiante, :id_materia, NOW())";
+                VALUES (:id_estudiante, :id_materia, :fecha_solicitud)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':id_estudiante' => $id_estudiante,
-            ':id_materia'    => $id_materia
+            ':id_materia'    => $id_materia,
+            ':fecha_solicitud' => $fecha_actual
         ]);
 
         $message = "<div class='alert alert-success mt-2' role='alert'>

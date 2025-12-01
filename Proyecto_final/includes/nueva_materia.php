@@ -12,6 +12,8 @@
     }
 
     require "conexion_bd.php";
+    date_default_timezone_set('America/Mexico_City');
+    $fecha_actual = date('Y-m-d H:i:s');
 
     // Asegurarnos que se envío algo
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -35,15 +37,16 @@
         $sql_insertar = "INSERT INTO materias (nombre, descripcion, id_profesor,
                                                id_estatus, fecha_creacion)
                         VALUES (:nombre, :descripcion, :id_profesor, 2,
-                                NOW())";
+                                :fecha_creacion)";
 
         // Preparar consulta de inserción
         $stmt_insertar = $pdo->prepare($sql_insertar);
 
         $resultado = $stmt_insertar->execute([
-            'nombre' => $nombre_materia,
-            'descripcion' => $descripcion,
-            'id_profesor' => $id_profesor
+            ':nombre' => $nombre_materia,
+            ':descripcion' => $descripcion,
+            ':id_profesor' => $id_profesor,
+            ':fecha_creacion' => $fecha_actual
         ]);
 
         // Si la inserción tuvo éxito regresamos al login

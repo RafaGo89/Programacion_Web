@@ -23,6 +23,8 @@
 
     try {
         require_once("../../includes/conexion_bd.php");
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Queries para obtener datos de la base de datos
         $roles = $pdo->query("SELECT id, nombre FROM roles")->fetchAll(PDO::FETCH_ASSOC);
@@ -98,7 +100,7 @@
                             correo = :correo,
                             id_rol = :rol,
                             id_estatus = :estatus,
-                            fecha_modificacion = NOW()
+                            fecha_modificacion = :fecha_modificacion
                         WHERE id = :id";
 
                 $stmt = $pdo->prepare($sql);
@@ -109,7 +111,8 @@
                     ':correo'     => $correo,
                     ':rol'     => $rol,
                     ':estatus' => $estatus,
-                    'id' => $id_usuario_post
+                    'id' => $id_usuario_post,
+                    ':fecha_modificacion' => $fecha_actual
                 ]);
 
                 // Redirigimos para evitar reenvío del formulario al refrescar

@@ -14,12 +14,14 @@
 
     try {
         require_once("conexion_bd.php");
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Si obtuvimos una petición GET
         if (!isset($_GET['id']) || !is_numeric($_GET['id']) 
-            || !isset($_GET['id_materia']) || !is_numeric($_GET['id_materia'])) {
+            || !isset($_GET['accion'])) {
             $message = "<div class='alert alert-warning mt-2' role='alert'>
-                    Ocurrió un error, inténtalo de nuevo.
+                    Error: Faltan datos principales (ID o Acción).
                     </div>";
 
             $_SESSION['mensaje'] = $message;
@@ -28,8 +30,7 @@
         }
 
         // Convertimos el valor recibido a entero por seguridad
-        $id = intval($_GET['id']);
-        $id_materia = intval($_GET['id_materia']);
+        $id = intval($_GET['id']);        
 
         // Nos cercioramos que la solicitud exista
         $stmt = $pdo->prepare("SELECT id      
@@ -50,15 +51,27 @@
 
         // Si se mandó a aprobar la solicitud
         if ($_GET['accion'] == 'aceptar') {
+                        // VALIDACIÓN ESPECÍFICA: Para aceptar SÍ necesitamos la materia
+            if (!isset($_GET['id_materia']) || !is_numeric($_GET['id_materia'])) {
+                $message = "<div class='alert alert-warning mt-2' role='alert'>
+                        Error: Se necesita el ID de la materia para aceptar.
+                        </div>";
+                $_SESSION['mensaje'] = $message;
+                header("Location: ../home/profesor/index.php");
+                exit;
+            }
+            $id_materia = intval($_GET['id_materia']);
+            
             // Procedemos a cambiar el estatus de la solicitud
             $sql = "UPDATE solicitudes SET 
                            estado = 'Aprobado',                        
-                           fecha_respuesta = NOW()
+                           fecha_respuesta = :fecha_respuesta
                     WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                ':id' => $id
+                ':id' => $id,
+                ':fecha_respuesta' => $fecha_actual
             ]);
 
             // Procedemos ver si la materia YA tiene tareas
@@ -123,12 +136,13 @@
             // Procedemos a cambiar el estatus de la solicitud
             $sql = "UPDATE solicitudes SET 
                            estado = 'Rechazado',                        
-                           fecha_respuesta = NOW()
+                           fecha_respuesta = :fecha_respuesta
                     WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                ':id' => $id
+                ':id' => $id,
+                ':fecha_respuesta' => $fecha_actual
             ]);
 
             $message = "<div class='alert alert-success mt-2' role='alert'>
@@ -149,9 +163,9 @@
         header("Location: ../home/profesor/index.php");
         exit;
     }
-    catch (PDOException $e) {
+    catch (PDOException) {
         $message = "<div class='alert alert-warning mt-2' role='alert'>
-                    {$e}
+                    Ocurrió un error, inténtalo de nuevo.
                     </div>";
 
         $_SESSION['mensaje'] = $message;

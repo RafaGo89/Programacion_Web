@@ -13,6 +13,8 @@
 
     try {
         require "conexion_bd.php";
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Asegurarnos que se envío algo
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -47,7 +49,7 @@
             $id_calificacion = $_POST["id_calificacion"];
 
             // Creamos consulta para actualizar la fila en calificación
-            $sql_actualizar = "UPDATE calificaciones SET fecha_entrega = NOW(),
+            $sql_actualizar = "UPDATE calificaciones SET fecha_entrega = :fecha_entrega,
                                                        esta_entregada = true,
                                                        comentarios = :comentarios
                             WHERE id = :id_calificacion";
@@ -56,8 +58,9 @@
             $stmt_actualizar = $pdo->prepare($sql_actualizar);
 
             $resultado = $stmt_actualizar->execute([
+                ':fecha_entrega'         => $fecha_actual,
                 ':comentarios'           => $comentarios,
-                ':id_calificacion'       => $id_calificacion,
+                ':id_calificacion'       => $id_calificacion
             ]);
 
             // Si la inserción tuvo éxito 

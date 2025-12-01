@@ -1,6 +1,8 @@
 <?php
     session_start();
     require "conexion_bd.php";
+    date_default_timezone_set('America/Mexico_City');
+    $fecha_actual = date('Y-m-d H:i:s');
 
     $ruta = "";
 
@@ -86,9 +88,9 @@
 
         // Si llegamos aquí, podemos ingresa al nuevo usuario
         $sql_insertar = "INSERT INTO usuarios (nombres, a_paterno, a_materno, correo,
-                                               contrasena, id_rol)
+                                               contrasena, id_rol, fecha_creacion)
                         VALUES (:nombres, :a_paterno, :a_materno, :correo, :contrasena,
-                                :id_rol)";
+                                :id_rol, :fecha_creacion)";
         
         $stmt_insertar = $pdo->prepare($sql_insertar);
         
@@ -98,7 +100,8 @@
             ':a_materno' => $a_materno,
             ':correo' => $correo,
             ':contrasena' => $hash_contrasena,
-            ':id_rol' => $rol
+            ':id_rol' => $rol,
+            ':fecha_creacion' => $fecha_actual
         ]);
 
         // Si la inserción tuvo éxito regresamos al login

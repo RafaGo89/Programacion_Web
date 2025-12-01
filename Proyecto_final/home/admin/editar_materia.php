@@ -23,6 +23,8 @@
 
     try {
         require_once("../../includes/conexion_bd.php");
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_actual = date('Y-m-d H:i:s');
 
         // Queries para obtener datos de la base de datos
         $profesores = $pdo->query("SELECT id, 
@@ -69,7 +71,7 @@
                            descripcion = :descripcion,
                            id_profesor = :id_profesor,
                            id_estatus = :id_estatus,                        
-                           fecha_modificacion = NOW()
+                           fecha_modificacion = :fecha_modificacion
                     WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
@@ -78,7 +80,8 @@
                 ':descripcion'    => $descripcion,
                 ':id_profesor'    => $id_profesor,
                 ':id_estatus'     => $id_estatus,
-                ':id'             => $id_materia_post
+                ':id'             => $id_materia_post,
+                ':fecha_modificacion' => $fecha_actual
             ]);
 
             // Redirigimos para evitar reenvío del formulario al refrescar

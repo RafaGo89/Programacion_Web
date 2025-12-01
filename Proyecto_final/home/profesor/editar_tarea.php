@@ -11,6 +11,8 @@
         header("Location: ../../index.php");
         exit;
     }
+    date_default_timezone_set('America/Mexico_City');
+    $fecha_actual = date('Y-m-d H:i:s');
 
     // DEFINICIÓN DE VARIABLES PARA LA VISTA
     $titulo = "Editar tarea"; // Esto cambiará el <title> del header
@@ -140,7 +142,7 @@
                            descripcion = :descripcion,
                            fecha_limite = :fecha_limite,
                            ponderacion = :ponderacion,                        
-                           fecha_modificacion = NOW()
+                           fecha_modificacion = :fecha_modificacion
                     WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
@@ -150,7 +152,8 @@
                 ':descripcion'     => $descripcion,
                 ':fecha_limite'    => $fecha_limite,
                 ':ponderacion'     => $ponderacion,
-                ':id'              => $id_tarea_post 
+                ':id'              => $id_tarea_post,
+                'fecha_modificacion' => $fecha_actual 
             ]);
 
             // Redirigimos para evitar reenvío del formulario al refrescar
