@@ -23,6 +23,10 @@
     $solicitudes = [];
     $tareas =[];
 
+    // 1. Configurar zona horaria (CRUCIAL para que "hoy" sea hoy en mi país)
+    date_default_timezone_set('America/Mexico_City');
+    $hoy_mexico = date('Y-m-d');
+
     try {
         require_once("../../includes/conexion_bd.php");
 
@@ -37,7 +41,8 @@
                                     INNER JOIN usuarios AS U
                                     ON M.id_profesor = U.id
                                     WHERE S.estado = 'Aprobado' AND
-                                          S.id_alumno = " . $id_estudiante)->fetchAll(PDO::FETCH_ASSOC);
+                                          M.id_estatus NOT IN (3, 4)
+                                    AND S.id_alumno = " . $id_estudiante)->fetchAll(PDO::FETCH_ASSOC);
         
         $inscripciones = $pdo->query("SELECT M.id,
                                              M.nombre AS materia,
@@ -83,7 +88,7 @@
                                     AND M.id_estatus NOT IN (4, 3)
                                     AND C.id_alumno = {$id_estudiante}
                                     AND S.id_alumno = {$id_estudiante}
-                                    AND DATEDIFF(T.fecha_limite, NOW()) >= 0
+                                    AND DATEDIFF(T.fecha_limite, '$hoy_mexico') >= 0
                                     AND C.esta_entregada = false
                                     ORDER BY
                                     T.fecha_limite")->fetchAll(PDO::FETCH_ASSOC);

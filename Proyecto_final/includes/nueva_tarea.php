@@ -40,7 +40,7 @@
             }
 
             // Validación de fecha
-            // 1. Configurar zona horaria (CRUCIAL para que "hoy" sea hoy en tu país)
+            // 1. Configurar zona horaria (CRUCIAL para que "hoy" sea hoy en mi país)
             date_default_timezone_set('America/Mexico_City');
 
             $fecha_post = $_POST["fecha_limite"];
